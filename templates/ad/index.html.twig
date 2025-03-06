@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ad.title }} - Объявление{% endblock %}
+
+{% block body %}
+    <div class="ad-show">
+        <h1>{{ ad.title }}</h1>
+        
+        <div class="ad-details">
+            <p><strong>Описание:</strong></p>
+            <p>{{ ad.description }}</p>
+            <p><strong>Цена:</strong> {{ ad.price | number_format(0, '.', ',') }} ₽</p>
+            <p><strong>Город:</strong> {{ ad.city }}</p>
+            <p><strong>Рейтинг:</strong> {{ ad.reating }}</p>
+        </div>
+    </div>
+{% endblock %}

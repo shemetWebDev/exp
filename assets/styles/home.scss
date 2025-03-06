@@ -1,0 +1,399 @@
+.banner {
+    z-index: 10;
+    position: relative;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+    text-align: start;
+    color: black;
+    padding: 100px 0 100px 100px;  
+}
+
+.banner__triangle{
+    position: absolute;
+ z-index: -1;
+ width: 240px;
+ left: -60px;
+ top: 0;
+ transform: rotate(45deg);
+
+}
+
+.banner__irregular_shape{
+    position: absolute;
+    z-index: -1;
+    width: 240px;
+    right: 10%;
+    bottom: 30%;
+    transform: rotate(120deg);
+}
+
+.banner__titleWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.banner__title {
+    font-size: 36px;
+    line-height: 34px;
+    font-weight: 700;
+    text-align: center;
+    color: #02282C;
+    margin-bottom: 100px;
+}
+
+.banner__titleWrapper img{
+    width: 200px;
+    height: 100%;
+    margin-bottom: 14px;
+}
+
+
+.banner__description {
+    font-size: 18px;
+}
+
+.banner__btnWrapper{
+    display:  flex;
+    justify-content: center;
+}
+
+.banner__list{
+    margin-bottom: 20px;
+}
+
+.banner__btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    color: white;
+    text-decoration: none;
+    width: 200px;
+    height: 40px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    background-color:rgb(0, 180, 216);
+    margin-right: 40px;
+}
+
+.banner__btn:hover{
+    background-color: hsl(180, 60%, 40%);
+}
+
+.services__title{
+    margin-bottom:  30px;
+}
+
+.splide {
+    width: 90%;
+    margin: auto;
+}
+
+.splide__slide {
+    background: #4FC3F7; /* Цвет фона */
+    color: #fff; /* Цвет текста */
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 200px ;
+    padding: 10px;
+    border-radius: 15px;
+    opacity: 0.6 ; /* Начальная прозрачность */
+    transition: height 0.4s ease, opacity 0.4s ease;
+}
+
+.splide__slide.is-active {
+    opacity: 1;
+    transform: scale(1.15); /* Увеличение центрального слайда */
+    z-index: 10000; /* Поднимаем, чтобы не перекрывался */
+}
+
+.splide__track {
+    overflow: visible !important; /* Разрешаем слайду выходить за границы */
+}
+
+.site-creation {
+    background-color: rgb(0, 180, 216);
+    padding: 60px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.site-creation {
+    background-color: rgb(0, 180, 216);
+    color: white;
+    padding: 80px 20px;
+    text-align: center;
+}
+
+.site-creation__container {
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.site-creation__header {
+    margin-bottom: 50px;
+}
+
+.site-creation__title {
+    font-size: 42px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.site-creation__subtitle {
+    font-size: 20px;
+    opacity: 0.9;
+}
+
+.site-creation__features {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+}
+
+.site-creation__feature {
+    background: white;
+    color: black;
+    padding: 30px;
+    border-radius: 15px;
+    width: 280px;
+    text-align: center;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.site-creation__feature:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+.site-creation__feature img {
+    width: 80px;
+    margin-bottom: 15px;
+}
+
+.site-creation__feature h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+}
+
+.site-creation__feature p {
+    font-size: 16px;
+    opacity: 0.8;
+}
+
+.site-creation__cta {
+    margin-top: 30px;
+}
+
+.site-creation__button {
+    background-color: #ffcc00;
+    color: black;
+    font-size: 18px;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.site-creation__button:hover {
+    background-color: #ffaa00;
+}
+
+/* Адаптивность */
+@media (max-width: 900px) {
+    .site-creation__features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .site-creation__feature {
+        width: 90%;
+    }
+}
+
+.services{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 34px 0 34px 0;
+}
+
+.services__card {
+    width: 250px;
+    margin-right: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.services__card-image {
+    width: 100%;
+    border-radius: 10px 10px 0 0;
+}
+
+.services__card-title {
+    font-size: 20px;
+    padding: 10px;
+}
+
+.services__card-description {
+    font-size: 16px;
+    padding: 0 10px;
+}
+
+.services__card-price {
+    font-size: 18px;
+    color: #27ae60;
+    padding: 10px;
+}
+
+.info{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.info_title{
+    margin-bottom: 24px;
+}
+
+.info__text{
+    margin-bottom: 16px;
+}
+
+.info__stats{
+    width: 100%;
+}
+
+
+.info__subText{
+font-size: 10px;
+margin-bottom: 20px;
+}
+
+.info__note{
+font-weight: 800;
+}
+
+.update {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px 0 40px 0;
+}
+
+.update__text {
+    margin-bottom: 22px;
+}
+
+.update_contactsWrapperS {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Telegram блок */
+.update_telegram {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.update_telegram img {
+    width: 50px;
+}
+
+.update_links {
+    display: flex;
+    gap: 15px;
+}
+
+.update_telegramLink {
+    color: rgb(0, 180, 216);
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 12px;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+.update_telegramLink:hover {
+    background-color: hsl(180, 60%, 40%);
+    color: #fff;
+}
+
+/* Email блок */
+.update_email {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.update_email img {
+    width: 30px;
+}
+
+.update_emailLink {
+    color: rgb(0, 180, 216);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.update_emailLink:hover {
+    text-decoration: underline;
+}
+
+/* Кнопка "Подать объявление" */
+.update_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px;
+    height: 40px;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    background-color: rgb(0, 180, 216);
+    transition: 0.3s ease;
+}
+
+.update_btn:hover {
+    background-color: hsl(180, 60%, 40%);
+}
+
+
+/* Мобильная версия */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .header__logo img {
+        height: 30px;
+    }
+
+    .hero__title {
+        font-size: 28px;
+    }
+
+    .services__carousel {
+        flex-direction: column;
+    }
+}

@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Log in!{% endblock %}
+
+{% block body %}
+    <form method="post">
+        {% if error %}
+            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        {% endif %}
+
+        {% if app.user %}
+            <div class="mb-3">
+                You are logged in as {{ app.user.email }}, <a href="{{ path('app_logout') }}">Logout</a>
+            </div>
+        {% endif %}
+       
+            {{ dump(last_email) }}
+        <h2>Если у Вас нет аккаунта сначала создайте его</h2>
+
+        <a href="{{path('app_register')}}">Зарегистрироваться </a>
+       
+
+        <h1 class="h3 mb-3 font-weight-normal">Войдите в Ваш акаунт</h1>
+        <label for="email">Email</label>
+        <input type="email" value="{{ last_email }}" name="email" id="email" class="form-control" autocomplete="email" required autofocus>
+
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" class="form-control" autocomplete="current-password" required>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button class="btn btn-lg btn-primary" type="submit">
+            Sign in
+        </button>
+    </form>
+{% endblock %}

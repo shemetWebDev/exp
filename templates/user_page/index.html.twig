@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Создать страницу</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.slug) }}
+        {{ form_row(form.keywords) }}
+        {{ form_row(form.subtitle) }}
+        {{ form_row(form.bannerImg) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.advantageOne) }}
+        {{ form_row(form.advantageTwoo) }}
+        {{ form_row(form.advantageThree) }}
+        {{ form_row(form.phone) }}
+        {{ form_row(form.adress) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.companyName) }}
+
+        <div id="map" class="map-container" style="height: 400px; width: 100%;"></div>
+
+        <input type="text" id="coordinates" class="form-control" placeholder="Координаты на карте" readonly />
+
+        {{ form_row(form.mapPosition) }}
+
+        <button class="btn btn-primary">Создать страницу</button>
+    {{ form_end(form) }}
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <script>
+        let map;
+        let marker;
+        function initMap() {
+            const defaultPosition = [48.8566, 2.3522]; 
+            map = L.map('map').setView(defaultPosition, 12);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+
+            marker = L.marker(defaultPosition, { draggable: true }).addTo(map);
+
+            marker.on('dragend', function(event) {
+                const position = event.target.getLatLng();
+                const coordinates = position.lat + ',' + position.lng;
+                document.getElementById('coordinates').value = coordinates;
+                document.querySelector('input[name="user_page[mapPosition]"]').value = coordinates;
+            });
+            map.on('click', function(event) {
+                const position = event.latlng;
+                marker.setLatLng(position);
+                const coordinates = position.lat + ',' + position.lng;
+                document.getElementById('coordinates').value = coordinates;
+                document.querySelector('input[name="user_page[mapPosition]"]').value = coordinates;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+{% endblock %}

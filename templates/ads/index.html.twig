@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ads index{% endblock %}
+
+{% block body %}
+
+{% include 'search/search.html.twig' %}
+    <h1>Ads index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Название</th>
+                <th>Описание</th>
+                <th>Цена</th>
+                <th>Город</th>
+                <th>Индекс города</th>
+                <th>Регион</th>
+                <th>Категория</th>
+                <th>Cоздано</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ad in ads %}
+            <tr>
+                <td>{{ ad.id }}</td>
+                <td>{{ ad.title }}</td>
+                <td>{{ ad.description }}</td>
+                <td>{{ ad.price }}</td>
+                <td>{{ ad.city }}</td>
+                <td>{{ ad.posteCode }}</td>
+                <td>{{ ad.region }}</td>
+                <td>{{ ad.category }}</td>
+                <td>{{ ad.createdAt ? ad.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+                
+                <td>
+                    <a href="{{ path('app_ads_show', {'id': ad.id}) }}">show</a>
+                   
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+     <a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="header__logIn-link">Подать обьявление</a>
+{% endblock %}

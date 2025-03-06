@@ -1,0 +1,195 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+<section class="banner">
+    <img class="banner__triangle" src="../public/images/triangle.svg" alt="">
+    <img class="banner__irregular_shape" src="../public/images/irregular_shape.svg" alt="">
+
+    <div class="banner__content">
+        <div class="banner__titleWrapper">
+            <img src="{{ asset('images/horizontal-logo.png') }}" alt="exapts_france, мигранты Франция изображение">
+            <h1 class="banner__title">Площадка обьявлений во Франции для наших!</h1>
+        </div>
+        <h3 class="banner__description">С помощью нашего сайта ExpFR Вы легко</h3>
+
+        <div class="banner__list">
+            <ul>
+                <li>Найди работу, жилье, автомеханика и многое другое.</li>
+                <li>Подайте обьявление о Вашей деятельности - врач, юрист, няня, повар.</li>
+                <li>Рестораны, магазины, кафе по городам</li>
+                <li>Возможность создания не только обьявления а и в несколько кликов страницу-сайт для Вашего бизнеса</li>
+            </ul>
+        </div>
+
+        <div class="banner__btnWrapper">
+            <a  href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="header__logIn-link">Подать обьявление</a>
+            <a href="{{path('app_ads_index')}}" class="banner__btn">Доска обьявлений</a>
+        </div>
+    </div>
+</section>
+<section class="site-creation">
+    <div class="site-creation__container">
+        <div class="site-creation__header">
+            <h2 class="site-creation__title">Создайте свой сайт за несколько кликов</h2>
+            <p class="site-creation__subtitle">
+                Вам не нужна дорогая разработка. Запустите сайт быстро, без затрат на сервер и поддержку.
+            </p>
+        </div>
+
+        <div class="site-creation__features">
+            <div class="site-creation__feature">
+                <img src="{{asset('images/castcom_responsive_web_design1.jpg')}}" alt="Адаптивный дизайн">
+                <h3>Адаптивный дизайн</h3>
+                <p>Ваш сайт будет идеально работать на любых устройствах.</p>
+            </div>
+
+            <div class="site-creation__feature">
+                <img src="{{asset('images/3.jpg')}}" alt="SEO-оптимизация">
+                <h3>SEO-оптимизация</h3>
+                <p>Продвижение в поисковых системах встроено в платформу.</p>
+            </div>
+
+            <div class="site-creation__feature">
+                <img src="{{asset('images/expFrSeo.jpg')}}" alt="Готовые шаблоны">
+                <h3>Готовые шаблоны</h3>
+                <p>Выберите профессиональный дизайн и настройте его за минуту.</p>
+            </div>
+        </div>
+
+        <div class="site-creation__cta">
+            <a href="{{ path('user_page_create') }}">
+    <button class="site-creation__button">Создать сайт</button>
+</a>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="services">
+    <h2 class="services__title">Примеры обьявлений</h2>
+    <div id="announcement-carousel" class="splide">
+        <div class="splide__track">
+            <ul class="splide__list">
+               {% for ad in ads %}
+                    <li class="splide__slide">
+                        <div class="services__card">
+                            <h4 class="services__card-title">{{ ad.title }}</h4>
+                            <p class="services__card-description">{{ ad.description }}</p>
+                            <a href="{{ path('app_ads_show', {'id': ad.id}) }}" class="services__btn">Перейти к объявлению</a>
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="info">
+    <h3 class="info_title">Почему мы ?</h3>
+    <p class="info__text">Мы собрали здесь всё для удобства пользователей и предпринимателей. Развиваем площадку, чтобы сделать её лучше для вас.</p>
+    <div class="info__stats">
+        <div class="chart-container">
+            <canvas id="visitsChart" style="max-height: 520px; width: 100%;"></canvas>
+        </div>
+    </div>
+    <p class="info__subText">generated with <span class="info__note">Google Analytics</span></p>
+</section>
+
+<section class="update">
+    <h3 class="update_title">Площадка ExpFr находится в процессе ежедневного обновления</h3>
+    <p class="update__text">Свяжитесь с нами и подайте объявление уже сегодня!</p>
+
+    <div class="update_contactsWrapperS">
+        <!-- Telegram блок -->
+        <div class="update_telegram">
+            <a href="https://t.me/ExpFRr" target="_blank">
+                <img src="{{ asset('https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg') }}" alt="Telegram">
+            </a>
+            <div class="update_links">
+                <a class="update_telegramLink" href="https://t.me/ExpFRr" target="_blank">Написать в Telegram</a>
+                <a class="update_telegramLink" href="https://t.me/ExpFranc" target="_blank">Присоединиться к каналу</a>
+            </div>
+        </div>
+
+        <!-- Email контакт -->
+        <div class="update_email">
+            <a href="mailto:contact@expfr.com" class="update_emailLink">pastmood@gmail.com</a>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascripts %}
+    <!-- Подключаем Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Подключаем Splide.js -->
+    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.8/dist/js/splide.min.js"></script>
+
+    <script>
+        // Получаем элемент canvas
+        var ctx = document.getElementById('visitsChart').getContext('2d');
+
+        // Создаем график
+        var visitsChart = new Chart(ctx, {
+            type: 'line', // Тип графика
+            data: {
+                labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май'], // Месяцы на русском
+                datasets: [{
+                    label: 'Общие посещения',
+                    data: [1800, 2100, 3000, 4700, 6500], // Данные о посещениях
+                    borderColor: 'rgba(75, 192, 192, 1)', // Цвет линии для общих посещений
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Цвет фона для общих посещений
+                    fill: true, // Заполнение области под графиком
+                    tension: 0.1 // Плавность кривой
+                },
+                {
+                    label: 'Уникальные пользователи',
+                    data: [1200, 1400, 2100, 3500, 4800], // Данные о уникальных пользователях
+                    borderColor: 'rgba(153, 102, 255, 1)', // Цвет линии для уникальных пользователей
+                    backgroundColor: 'rgba(153, 102, 255, 0.2)', // Цвет фона для уникальных пользователей
+                    fill: true, // Заполнение области под графиком
+                    tension: 0.1 // Плавность кривой
+                }]
+            },
+            options: {
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true // Начало оси X с 0
+                    },
+                    y: {
+                        beginAtZero: true // Начало оси Y с 0
+                    }
+                }
+            }
+        });
+
+        // Инициализация слайдера с объявлениями
+        document.addEventListener('DOMContentLoaded', function () {
+            var splide = new Splide('#announcement-carousel', {
+                type       : 'loop',         // Бесконечная прокрутка
+                perPage    : 3,              // 3 слайда на странице
+                focus      : 'center',
+                perMove    : 1,              // Сколько слайдов двигать за раз
+                gap        : '2rem',         // Расстояние между слайдами
+                autoplay  : true,            // Автопрокрутка
+                pauseOnHover: true,          // Остановка прокрутки при наведении
+                breakpoints: {
+                    1200: {
+                        perPage: 2,         // На экранах с шириной до 1200px будет показываться 2 слайда
+                    },
+                    800: {
+                        perPage: 1,         // На экранах с шириной до 800px будет показываться 1 слайд
+                    },
+                },
+            });
+
+            splide.mount();
+        });
+    </script>
+{% endblock %}

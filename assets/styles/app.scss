@@ -1,0 +1,195 @@
+/* Указываем box sizing */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Убираем внутренние отступы */
+ul[class],
+ol[class] {
+  padding: 0;
+}
+
+/* Убираем внешние отступы */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Выставляем основные настройки по-умолчанию для body */
+body {
+  min-height: 100vh;
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+/* Устанавливаем шрифт по умолчанию */
+body {
+  font-family: 'Inter', sans-serif;
+  font-size: 16px; /* Базовый размер текста */
+  line-height: 1.5; /* Удобный межстрочный интервал */
+  color: #333; /* Основной цвет текста */
+}
+
+/* Размеры шрифта для разных элементов */
+h1 {
+  font-size: 2.5rem; /* 40px */
+  font-weight: 700; /* Жирный */
+}
+
+h2 {
+  font-size: 2rem; /* 32px */
+  font-weight: 600; /* Полужирный */
+}
+
+h3 {
+  font-size: 1.75rem; /* 28px */
+  font-weight: 600; /* Полужирный */
+}
+
+p, a {
+  font-size: 1rem; /* 16px */
+  font-weight: 400; /* Обычный текст */
+}
+
+button {
+  font-size: 1rem; /* 16px */
+  font-weight: 500; /* Полужирный текст для кнопок */
+  text-transform: uppercase; /* Преобразование текста в верхний регистр */
+}
+
+/* Удаляем стандартную стилизацию для всех ul и il, у которых есть атрибут class*/
+ul[class],
+ol[class] {
+  list-style: none;
+}
+
+/* Элементы a, у которых нет класса, сбрасываем до дефолтных стилей */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+/* Упрощаем работу с изображениями */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* Указываем понятную периодичность в потоке данных у article*/
+article > * + * {
+  margin-top: 1em;
+}
+
+/* Наследуем шрифты для инпутов и кнопок */
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+/* Удаляем все анимации и переходы для людей, которые предпочитай их не использовать */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    padding: 20px;
+    background-color: #1E2A38;
+    color: #F5F5F5;
+}
+
+.header__logo img {
+    width: 160px;
+   
+}
+
+.header__nav {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+   padding: 0 25px 0 25px;
+}
+
+.header__nav-link--logIn img{
+    width: 30px;
+}
+
+.header__nav-link {
+    color:  white;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.header__nav-link:hover {
+    color: hsl(180, 60%, 40%); 
+}
+
+
+.header__logIn-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 220px;
+    font-size: 14px;
+    color: white;
+    text-decoration: none;
+    padding: 5px 10px;
+    background-color:rgb(0, 180, 216);
+    border-radius: 5px;
+}
+
+.header__logIn-link:hover{
+    background-color:hsl(180, 60%, 40%);
+}
+
+.header__nav-link--logIn{
+    display: flex;
+    align-items: center;
+    color:  white;
+    font-size: 18px;
+    text-decoration: none;
+}
+
+.header__nav-link--logIn:hover{
+    color: hsl(180, 60%, 40%); 
+}
+
+.footer {
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.footer__contact, .footer__links, .footer__socials {
+    margin-bottom: 10px;
+}
+
+.footer__link, .footer__social-link {
+    color: white;
+    text-decoration: none;
+    margin-right: 15px;
+}

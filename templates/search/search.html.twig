@@ -1,0 +1,19 @@
+<form  method="GET" class="search-form">
+    <div class="form-group">
+        <label for="category">Категория</label>
+        {% include 'search/categories.html.twig' %}
+    </div>
+    
+    <div class="form-group">
+        <label for="region">Регион</label>
+        {% include 'search/regions.html.twig' %}
+    </div>
+    
+    <div class="form-group">
+        <label for="search">Поиск</label>
+        <input type="text" name="search" id="search" class="form-control" placeholder="Поиск..." value="{{ app.request.query.get('search') }}">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Найти</button>
+    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-secondary">Сбросить</a>
+</form>

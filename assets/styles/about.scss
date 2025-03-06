@@ -1,0 +1,65 @@
+/* public/css/about.css */
+
+.about-page {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: #f9f9f9;
+    color: #333;
+    padding: 40px;
+}
+
+.about-header {
+    background-color: #007BFF;
+    color: white;
+    padding: 40px;
+    text-align: center;
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.about-header h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.about-header p {
+    font-size: 1.25rem;
+}
+
+.about-story, .about-why, .about-services, .about-contact {
+    background-color: white;
+    padding: 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.about-story h2, .about-why h2, .about-services h2, .about-contact h2 {
+    color: #007BFF;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+.about-services ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.about-services li {
+    font-size: 1.2rem;
+    padding: 10px;
+}
+
+.about-contact a {
+    text-decoration: none;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-top: 20px;
+}
+
+.about-contact a:hover {
+    background-color: #218838;
+}

@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Создать статью{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1>Создать статью</h1>
+
+        {{ form_start(form) }}
+        <div class="mb-3">
+            {{ form_label(form.title) }}
+            {{ form_widget(form.title, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.title) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.description) }}
+            {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
+            {{ form_errors(form.description) }}
+        </div>
+
+        <div class="mb-3">
+            {{ form_label(form.documents) }}
+            <div>
+                {{ form_widget(form.documents, {'attr': {'class': 'form-control'}}) }}
+            </div>
+            {{ form_errors(form.documents) }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Создать статью</button>
+        {{ form_end(form) }}
+
+        <hr>
+
+        <h2>Список статей</h2>
+        {% for article in articles %}
+            <div class="card mt-3">
+                <div class="card-body">
+                    <h5 class="card-title">{{ article.title }}</h5>
+                    <p class="card-text">{{ article.description }}</p>
+                    <p><small class="text-muted">Создано: {{ article.createAt|date('d.m.Y H:i') }}</small></p>
+                    
+                    {% if article.documents is not empty %}
+                        <h6>Прикрепленные файлы:</h6>
+                        <ul>
+                            {% for doc in article.documents %}
+                                <li><a href="{{ asset('uploads/pdf/' ~ doc.path) }}" target="_blank">{{ doc.path }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p><small class="text-muted">Файлы не загружены</small></p>
+                    {% endif %}
+                </div>
+            </div>
+        {% else %}
+            <p>Статей пока нет.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ userPage.title }}</title>
+    <meta name="keywords" content="{{ userPage.keywords }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+<div class="custom-header">
+    <div class="custom-nav">
+        <ul class="custom-nav-list">
+            <li><a href="#about">О нас</a></li>
+            <li><a href="#advantages">Преимущества</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+            <li><a href="#mapPosition">Найди нас на карте</a></li>
+        </ul>
+        <a href="/" class="custom-back">Вернуться на площадку</a>
+    </div>
+</div>
+
+<div class="custom-banner" style="background-image: url('{{ asset('uploads/' ~ userPage.bannerImg) }}');">
+    <div class="custom-overlay"></div>
+    <div class="custom-content">
+        <h1>{{ userPage.title }}</h1>
+        <p>{{ userPage.subtitle }}</p>
+    </div>
+</div>
+
+<div id="about" class="custom-about">
+    <div class="custom-container">
+        <img src="{{ asset('uploads/' ~ userPage.image) }}" alt="О нас">
+        <div class="custom-text">
+            <h2>О нас</h2>
+            <p>{{ userPage.companyName }}</p>
+        </div>
+    </div>
+</div>
+
+<div id="advantages" class="custom-advantages">
+    <h2>Наши преимущества</h2>
+    <div class="custom-advantage-container">
+        <div class="custom-advantage">
+            <div class="custom-icon">✔</div>
+            <p>{{ userPage.advantageOne }}</p>
+        </div>
+        <div class="custom-advantage">
+            <div class="custom-icon">✔</div>
+            <p>{{ userPage.advantageTwoo }}</p>
+        </div>
+        <div class="custom-advantage">
+            <div class="custom-icon">✔</div>
+            <p>{{ userPage.advantageThree }}</p>
+        </div>
+    </div>
+</div>
+
+<div id="contacts" class="custom-contacts">
+    <h2>Контакты</h2>
+    <p><i class="fas fa-phone"></i> {{ userPage.phone }}</p>
+    <p><i class="fas fa-envelope"></i> {{ userPage.email }}</p>
+    <p><i class="fas fa-map-marker-alt"></i> {{ userPage.adress }}</p>
+    <div id="mapPosition" class="custom-map">
+        <iframe src="https://maps.google.com/maps?q={{ userPage.mapPosition }}&z=6&output=embed"></iframe>
+    </div>
+</div>
+
+<div class="custom-footer">
+    <p>&copy; {{ "now"|date("Y") }} {{ userPage.companyName }}. Все права защищены.</p>
+</div>
+
+</body>
+</html>

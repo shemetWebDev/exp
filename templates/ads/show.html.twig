@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ads{% endblock %}
+
+{% block body %}
+    <h1>Ads</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ ad.id }}</td>
+            </tr>
+            <tr>
+                <th>Title</th>
+                <td>{{ ad.title }}</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>{{ ad.description }}</td>
+            </tr>
+            <tr>
+                <th>Price</th>
+                <td>{{ ad.price }}</td>
+            </tr>
+            <tr>
+                <th>City</th>
+                <td>{{ ad.city }}</td>
+            </tr>
+            <tr>
+                <th>Poste_code</th>
+                <td>{{ ad.posteCode }}</td>
+            </tr>
+            <tr>
+                <th>Reating</th>
+                <td>{{ ad.reating }}</td>
+            </tr>
+            <tr>
+                <th>Created_at</th>
+                <td>{{ ad.createdAt ? ad.createdAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Updated_at</th>
+                <td>{{ ad.updatedAt ? ad.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_ads_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}📄 Список статей{% endblock %}
+
+{% block body %}
+    <h1>📚 Документы</h1>
+
+    {% for article in articles %}
+        <div class="article" style="border:1px solid #ddd; padding:15px; margin-bottom:20px;">
+            <h2>{{ article.title }}</h2>
+            <p>{{ article.description }}</p>
+
+            {% if isLoggedIn %}
+                <h4>📁 Документы:</h4>
+                <ul>
+                    {% for document in article.documents %}
+                        <li>
+                            <a href="/uploads/pdf/{{ document.path }}" target="_blank">
+                                {{ document.path }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>Нет прикрепленных документов.</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p><strong>⚠️ Чтобы видеть документы, <a href="{{ path('app_login') }}">войдите</a> или <a href="{{ path('app_register') }}">зарегистрируйтесь</a>.</strong></p>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>❌ Нет доступных статей.</p>
+    {% endfor %}
+{% endblock %}

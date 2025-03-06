@@ -1,0 +1,16 @@
+   <select name="region" id="region" class="form-control">
+            <option value="">Выберите регион</option>
+            <option value="Ile-de-France" {% if region == 'Ile-de-France' %}selected{% endif %}>Île-de-France (Иль-де-Франс)</option>
+            <option value="Hauts-de-France" {% if region == 'Hauts-de-France' %}selected{% endif %}>Hauts-de-France (О-де-Франс)</option>
+            <option value="Grand Est" {% if region == 'Grand Est' %}selected{% endif %}>Grand Est (Гранд-Эст)</option>
+            <option value="Normandie" {% if region == 'Normandie' %}selected{% endif %}>Normandie (Нормандия)</option>
+            <option value="Bretagne" {% if region == 'Bretagne' %}selected{% endif %}>Bretagne (Бретань)</option>
+            <option value="Pays de la Loire" {% if region == 'Pays de la Loire' %}selected{% endif %}>Pays de la Loire (Пеи-де-ла-Луар)</option>
+            <option value="Centre-Val de Loire" {% if region == 'Centre-Val de Loire' %}selected{% endif %}>Centre-Val de Loire (Центр — Долина Луары)</option>
+            <option value="Bourgogne-Franche-Comte" {% if region == 'Bourgogne-Franche-Comte' %}selected{% endif %}>Bourgogne-Franche-Comte (Бургундия — Франш-Конте)</option>
+            <option value="Auvergne-Rhone-Alpes" {% if region == 'Auvergne-Rhone-Alpes' %}selected{% endif %}>Auvergne-Rhône-Alpes (Овернь — Рона — Альпы)</option>
+            <option value="Nouvelle-Aquitaine" {% if region == 'Nouvelle-Aquitaine' %}selected{% endif %}>Nouvelle-Aquitaine (Новая Аквитания)</option>
+            <option value="Occitanie" {% if region == 'Occitanie' %}selected{% endif %}>Occitanie (Окситания)</option>
+            <option value="Provence-Alpes-Cote d'Azur" {% if region == 'Provence-Alpes-Cote d\'Azur' %}selected{% endif %}>Provence-Alpes-Côte d'Azur (Прованс — Альпы — Лазурный Берег)</option>
+            <option value="Corse" {% if region == 'Corse' %}selected{% endif %}>Corse (Корсика)</option>
+        </select>

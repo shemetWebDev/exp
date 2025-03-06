@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Редактирование страницы{% endblock %}
+
+{% block body %}
+    <h1>Редактировать страницу</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.title) }}
+        {{ form_row(form.slug) }}
+        {{ form_row(form.keywords) }}
+        {{ form_row(form.subtitle) }}
+        {{ form_row(form.bannerImg) }}
+        {{ form_row(form.image) }}
+        {{ form_row(form.advantageOne) }}
+        {{ form_row(form.advantageTwoo) }}
+        {{ form_row(form.advantageThree) }}
+        {{ form_row(form.phone) }}
+        {{ form_row(form.adress) }}
+        {{ form_row(form.email) }}
+        {{ form_row(form.companyName) }}
+        <button class="btn btn-primary">Обновить страницу</button>
+    {{ form_end(form) }}
+{% endblock %}
