@@ -1,0 +1,36 @@
+# Включаем перезапись URL
+RewriteEngine On
+
+# Если файл или директория существует, не перенаправлять запросы на index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Перенаправляем все запросы на index.php для обработки Symfony
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Разрешаем доступ к статическим файлам в public/assets/ (например, изображениям, стилям, скриптам)
+RewriteRule ^assets/.*$ - [L]
+
+# Разрешаем доступ только к определенным типам файлов (например, изображениям, стилям, скриптам)
+<FilesMatch "\.(jpg|jpeg|png|gif|css|js|ico|xml|txt|pdf|svg|woff|woff2|ttf|eot)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+</FilesMatch>
+
+# Защищаем файл .env от публичного доступа
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+
+# Запрещаем индексацию файлов и папок (если в каталоге нет index.php)
+Options -Indexes
+
+# Заголовки безопасности
+Header set X-Content-Type-Options "nosniff"
+Header set X-XSS-Protection "1; mode=block"
+Header set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+Header set Content-Security-Policy "default-src 'self'; script-src 'self'; object-src 'none';"
+
+# Настройка для защиты от возможных атак
+SetEnvIf Referer "(\.env|\.git)" bad_referer
+Deny from env=bad_referer
