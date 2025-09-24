@@ -1,62 +1,117 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Профиль пользователя{% endblock %}
+{% set base = 'profile' %}
+
+{% block title %}Профиль пользователя
+{% endblock %}
 
 {% block body %}
-    <div class="profile-container">
-        <div class="profile-header">
-            <h1>Добро пожаловать, {{ user.username }}!</h1>
+	<section class="{{ base }}">
+		<header class="{{ base }}__header">
+			<div class="{{ base }}__user">
+				<div class="{{ base }}__avatar" aria-hidden="true">{{ user.username|first|upper }}</div>
+				<div>
+					<h1 class="{{ base }}__title">Привет,
+						{{ user.username }}!</h1>
+					<p class="{{ base }}__email">{{ user.email }}</p>
+				</div>
+			</div>
+			<div class="{{ base }}__header-actions">
+				<a href="{{ path('app_edit_profil') }}" class="{{ base }}__btn {{ base }}__btn--primary">Редактировать профиль</a>
+				<a href="{{ path('app_logout') }}" class="{{ base }}__btn {{ base }}__btn--ghost">Выйти</a>
+			</div>
+		</header>
 
-            <p class="email">{{ user.email }}</p>
-            <a href="{{ path('app_edit_profil') }}" class="btn btn-primary">Редактировать профиль</a>
-        </div>
+		<div
+			class="{{ base }}__grid">
+			{# Секция «Ваши объявления» #}
+			<section class="{{ base }}__section">
+				<div class="{{ base }}__section-head">
+					<h2 class="{{ base }}__section-title">Ваши объявления</h2>
+					<a href="{{ path('app_ads_new') }}" class="{{ base }}__link">+ Добавить объявление</a>
+				</div>
 
-        <a href="{{ path('app_logout') }}">Выйти с кабинета</a>
+				{% if usersAds is not empty %}
+					<ul class="{{ base }}__list">
+						{% for ad in usersAds %}
+							<li class="{{ base }}__item">
+								<div class="{{ base }}__item-main">
+									<h3 class="{{ base }}__item-title">{{ ad.title }}</h3>
+									{% if ad.description is defined and ad.description %}
+										<p class="{{ base }}__item-desc">
+											{{ ad.description|length > 120 ? ad.description|slice(0, 120) ~ '…' : ad.description }}
+										</p>
+									{% endif %}
+								</div>
+								<div class="{{ base }}__item-actions">
+									<a href="{{ path('app_ads_edit', {'id': ad.id}) }}" class="{{ base }}__btn {{ base }}__btn--soft">Редактировать</a>
+									{{ include('ads/_delete_form.html.twig', { button_class: base ~ '__btn ' ~ base ~ '__btn--danger' }) }}
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<div class="{{ base }}__empty">
+						<div class="{{ base }}__empty-icon" aria-hidden="true">📭</div>
+						<p class="{{ base }}__empty-text">У вас пока нет объявлений.</p>
+						<a href="{{ path('app_ads_new') }}" class="{{ base }}__btn {{ base }}__btn--primary">Создать объявление</a>
+					</div>
+				{% endif %}
+			</section>
 
-        <div class="ads-section">
-            <h2>Ваши объявления</h2>
-            {% if usersAds is not empty %}
-                <ul class="ads-list">
-                    {% for ad in usersAds %}
-                        <li class="ad-item">
-                            <span class="ad-title">{{ ad.title }}</span>
-                            <div class="ad-actions">
-                                <a href="{{ path('app_ads_edit', {'id': ad.id}) }}" class="btn btn-warning">Редактировать</a>
-                                {{ include('ads/_delete_form.html.twig') }}
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-ads">У вас пока нет объявлений.</p>
-            {% endif %}
-        </div>
-        <div class="pages-section">
-            <h2>Ваши страницы</h2>
-            {% if pages is not empty %}
-                <ul class="pages-list">
-                    {% for page in pages %}
-                        <li class="page-item">
-                            <h3>{{ page.title }}</h3>
-                            <p><strong>Подзаголовок:</strong> {{ page.subtitle }}</p>
-                            <p><strong>Телефон:</strong> {{ page.phone }}</p>
-                            <p><strong>Адрес:</strong> {{ page.adress }}</p>
-                            <p><strong>Email:</strong> {{ page.email }}</p>
-                           
-                            <div class="page-actions">
-                                <a href="{{ path('user_page_show', {'slug': page.slug}) }}" class="btn btn-info">Посмотреть</a>
-                                <a href="{{ path('user_page_edit', {'id': page.id}) }}" class="btn btn-warning">Редактировать</a>
-                                <form action="{{ path('user_page_delete', {'id': page.id}) }}" method="post" onsubmit="return confirm('Вы уверены, что хотите удалить эту страницу?');">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ page.id) }}">
-                                    <button type="submit" class="btn btn-danger">Удалить</button>
-                                </form>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p class="no-pages">У вас пока нет страниц.</p>
-            {% endif %}
-        </div>
-    </div>
+			{# Секция «Ваши страницы» #}
+			<section class="{{ base }}__section">
+				<div class="{{ base }}__section-head">
+					<h2 class="{{ base }}__section-title">Ваши страницы</h2>
+					<a href="{{ path('user_page_create') }}" class="{{ base }}__link">+ Создать страницу</a>
+				</div>
+
+				{% if pages is not empty %}
+					<ul class="{{ base }}__list">
+						{% for page in pages %}
+							<li class="{{ base }}__item">
+								<div class="{{ base }}__item-main">
+									<h3 class="{{ base }}__item-title">{{ page.title }}</h3>
+									{% if page.subtitle %}
+										<p class="{{ base }}__item-meta">
+											<strong>Подзаголовок:</strong>
+											{{ page.subtitle }}</p>
+									{% endif %}
+									{% if page.phone %}
+										<p class="{{ base }}__item-meta">
+											<strong>Телефон:</strong>
+											{{ page.phone }}</p>
+									{% endif %}
+									{% if page.adress %}
+										<p class="{{ base }}__item-meta">
+											<strong>Адрес:</strong>
+											{{ page.adress }}</p>
+									{% endif %}
+									{% if page.email %}
+										<p class="{{ base }}__item-meta">
+											<strong>Email:</strong>
+											{{ page.email }}</p>
+									{% endif %}
+								</div>
+								<div class="{{ base }}__item-actions">
+									<a href="{{ path('user_page_show', {'slug': page.slug}) }}" class="{{ base }}__btn {{ base }}__btn--soft">Посмотреть</a>
+									<a href="{{ path('user_page_edit', {'id': page.id}) }}" class="{{ base }}__btn {{ base }}__btn--soft">Редактировать</a>
+									<form action="{{ path('user_page_delete', {'id': page.id}) }}" method="post" onsubmit="return confirm('Удалить эту страницу?');" class="{{ base }}__inline-form">
+										<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ page.id) }}">
+										<button type="submit" class="{{ base }}__btn {{ base }}__btn--danger">Удалить</button>
+									</form>
+								</div>
+							</li>
+						{% endfor %}
+					</ul>
+				{% else %}
+					<div class="{{ base }}__empty">
+						<div class="{{ base }}__empty-icon" aria-hidden="true">🗂️</div>
+						<p class="{{ base }}__empty-text">У вас пока нет страниц.</p>
+						<a href="{{ path('user_page_create') }}" class="{{ base }}__btn {{ base }}__btn--primary">Создать страницу</a>
+					</div>
+				{% endif %}
+			</section>
+		</div>
+	</section>
 {% endblock %}

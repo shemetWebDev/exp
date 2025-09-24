@@ -1,0 +1,181 @@
+/* ads-form.scss — стили формы создания объявления */
+
+.ads-create {
+  padding-top: 12px;
+}
+
+.ads-form--panel {
+  background: #f6f8fb;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 6px 18px rgba(2, 8, 23, 0.04);
+  padding: 16px;
+
+  @media (min-width: 640px) {
+    padding: 18px;
+  }
+  @media (min-width: 960px) {
+    padding: 22px;
+  }
+}
+
+/* Сетка */
+.ads-form__grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1fr;
+
+  @media (min-width: 960px) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.ads-field {
+  display: grid;
+  gap: 6px;
+
+  &--full {
+    grid-column: 1 / -1;
+  }
+}
+
+.ads-field__label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: 0.2px;
+  margin-bottom: 2px;
+}
+
+/* Inputs */
+.ads-input {
+  width: 100%;
+  min-height: 46px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 15px;
+  color: #0f172a;
+  line-height: 1.4;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+
+  &:hover {
+    border-color: rgb(0, 180, 216);
+  }
+  &:focus {
+    outline: none;
+    border-color: rgb(0, 180, 216);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+    background: #fff;
+  }
+  &::placeholder {
+    color: #94a3b8;
+  }
+  &:disabled {
+    background-color: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+}
+
+/* Select */
+.ads-input--select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px 18px;
+}
+
+/* Textarea */
+.ads-input--textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+/* File */
+.ads-input--file {
+  padding: 10px;
+  background: #fff;
+}
+
+/* Ошибки */
+.ads-field__help {
+  font-size: 12px;
+  color: #6b7280;
+}
+.form-error-message,
+.form-errors,
+.ads-field .invalid-feedback {
+  color: #ef4444;
+  font-size: 12px;
+}
+
+/* Actions */
+.ads-form__actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 10px;
+  margin-top: 6px;
+
+  @media (max-width: 639px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .ads__cta,
+    .ads__cta--ghost {
+      width: 100%;
+      justify-content: center;
+      min-height: 46px;
+    }
+  }
+}
+
+/* Кнопки */
+.ads__cta,
+.ads__cta--ghost {
+  font-size: 15px;
+  padding: 11px 16px;
+  border-radius: 12px;
+}
+.ads__cta--ghost:hover {
+  background: rgba(0, 180, 216, 0.06);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .ads-form--panel {
+    background: #0b1220;
+    border-color: #1f2a3b;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  }
+  .ads-field__label {
+    color: #e5e7eb;
+  }
+  .ads-input {
+    background: #0b1220;
+    border-color: #1f2a3b;
+    color: #e5e7eb;
+
+    &:hover {
+      border-color: rgba(0, 180, 216, 0.7);
+    }
+    &:focus {
+      border-color: rgb(0, 180, 216);
+      box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.25);
+    }
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ads-input,
+  .ads__cta {
+    transition: none;
+  }
+}

@@ -1,0 +1,32 @@
+<div class="wizard-pane {{ active ? 'is-active' }}" data-step="4" role="tabpanel">
+	<div class="ui-card">
+		<div class="wizard__map-layout">
+			<div class="wizard__map-col">
+				<div id="map" class="wizard__map" aria-label="Карта выбора координат">
+					<div class="wizard__map-skel">Загружаем карту…</div>
+				</div>
+			</div>
+
+			<div class="wizard__side">
+				<label for="placeSearch" class="ui-field__label">Поиск города</label>
+				<div class="wizard__search">
+					<input id="placeSearch" type="text" class="ui-input" placeholder="Paris, Nice, Lyon…" autocomplete="off">
+					<button type="button" id="placeSubmit" class="btn btn--primary wizard__search-btn" title="Найти">Найти</button>
+				</div>
+
+				<button type="button" class="btn btn--soft wizard__geo" id="btnLocate">Моё местоположение</button>
+
+				<label class="ui-field__label" style="margin-top:12px;">Координаты</label>
+				<input id="coordinates" type="text" class="wizard__coord" placeholder="Кликните по карте или перетащите маркер" readonly>
+				<div class="wizard__muted">Любое действие на карте сразу обновляет координаты.</div>
+
+				<div style="display:none">
+					{{ form_widget(form.mapPosition, { attr: { class: 'ui-input', readonly: true } }) }}
+				</div>
+				{% if form_errors(form.mapPosition) %}
+					<div class="ui-field__errors">{{ form_errors(form.mapPosition) }}</div>
+				{% endif %}
+			</div>
+		</div>
+	</div>
+</div>

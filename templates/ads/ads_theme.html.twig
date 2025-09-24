@@ -1,0 +1,34 @@
+{# templates/forms/ads_theme.html.twig #}
+
+{# form_row — каждая строка формы #}
+{% block form_row -%}
+	<div class="ads-field {{ row_attr.class|default('') }}"> {{- form_label(form, null, {
+      label_attr: { class: (label_attr.class|default('') ~ ' ads-field__label')|trim }
+    }) -}}
+	{{- form_widget(form) -}}
+	{{- form_errors(form) -}}
+</div>{%- endblock form_row %}{# form_label #}{% block form_label -%}{% if label is not same as(false) %}
+{% if label is empty %}
+	{% set label = name|humanize %}
+{% endif %}
+{% set label_attr = label_attr|merge({
+      class: (label_attr.class|default('') ~ ' ads-field__label')|trim
+    }) %}
+<label for="{{ id }}" {% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}" {% endfor %}>
+	{{ label|trans({}, translation_domain) }}
+</label>{% endif %}{%- endblock form_label %}{# Текстовые инпуты #}{% block form_widget_simple -%}{% set type = type|default('text') %}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads-input')|trim
+  }) %}<input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %} value="{{ value }}" {% endif %}>{%- endblock form_widget_simple %}{# textarea #}{% block textarea_widget -%}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads-input ads-input--textarea')|trim
+  }) %}<textarea {{ block('widget_attributes') }}>{{ value }}</textarea>{%- endblock textarea_widget %}{# select (collapsed choice) #}{% block choice_widget_collapsed -%}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads-input ads-input--select')|trim
+  }) %}<select {{ block('widget_attributes') }}>{% if placeholder is not null %}<option value="" {% if required and value is empty %} selected="selected" {% endif %}>{{ placeholder != '' ? (translation_domain is same as(false) ? placeholder : placeholder|trans({}, translation_domain)) }}</option>{% endif %}{% for group_label, choice in choices %}{% if choice is iterable %}<optgroup label="{{ group_label }}">
+{% for c in choice %}
+	<option value="{{ c.value }}" {% if c.value == value %} selected="selected" {% endif %}>{{ c.label }}</option>
+{% endfor %}</optgroup>{% else %}<option value="{{ choice.value }}" {% if choice.value == value %} selected="selected" {% endif %}>{{ choice.label }}</option>{% endif %}{% endfor %}</select>{%- endblock choice_widget_collapsed %}{# radio/checkbox группы #}{% block choice_widget_expanded -%}<div {{ block('widget_container_attributes') }}>{% for child in form %}<div class="ads-choice">{{- form_widget(child) -}}{{- form_label(child) -}}</div>{% endfor %}</div>{%- endblock choice_widget_expanded %}{# file input #}{% block file_widget -%}{% set type = type|default('file') %}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads-input ads-input--file')|trim
+  }) %}<input type="{{ type }}" {{ block('widget_attributes') }}>{%- endblock file_widget %}{# money (MoneyType) — только поле, без валютного символа #}{% block money_widget -%}{{ block('form_widget_simple') }}{%- endblock money_widget %}{# button #}{% block button_widget -%}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads__cta')|trim
+  }) %}<button type="{{ type|default('button') }}" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button>{%- endblock button_widget %}{# submit #}{% block submit_widget -%}{% set attr = attr|merge({
+    class: (attr.class|default('') ~ ' ads__cta')|trim
+  }) %}<button type="submit" {{ block('button_attributes') }}>{{ label|trans({}, translation_domain) }}</button> {%- endblock submit_widget %} {# Ошибки #} {% block form_errors -%} {% if errors|length > 0 %}<ul class="form-errors">{% for error in errors %}<li class="form-error-message">{{ error.message }}</li>{% endfor %}</ul> {% endif %}{%- endblock form_errors %}

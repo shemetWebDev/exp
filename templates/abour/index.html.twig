@@ -1,41 +1,226 @@
-
-
 {% extends 'base.html.twig' %}
 
-{% block title %}О нас{% endblock %}
+{% set brand = 'ExpFR' %}
+{% set page_title = 'О нас — ' ~ brand %}
+{% set page_desc  = 'Мы помогаем бизнесам и частным специалистам находить клиентов онлайн: сайт-страницы, объявления, SEO и удобные контакты.' %}
+{% set page_keywords = 'ExpFR, о нас, объявления Франция, мини-сайт, сайт для бизнеса, продвижение, SEO, контакты' %}
+{% set canonical = app.request.uri %}
+
+{% block title %}
+	{{ page_title }}
+{% endblock %}
+
+{# если в базовом лэйауте нет отдельного блока для мета — добавлять их в stylesheets (он рендерится в <head>) допустимо #}
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="canonical" href="{{ canonical }}"/>
+	<meta name="description" content="{{ page_desc }}"/>
+	<meta
+	name="keywords" content="{{ page_keywords }}"/>
+
+	{# OpenGraph/Twitter #}
+	<meta property="og:type" content="website"/>
+	<meta property="og:title" content="{{ page_title }}"/>
+	<meta property="og:description" content="{{ page_desc }}"/>
+	<meta property="og:url" content="{{ canonical }}"/>
+	<meta name="twitter:card" content="summary_large_image"/>
+	<meta name="twitter:title" content="{{ page_title }}"/>
+	<meta name="twitter:description" content="{{ page_desc }}"/>
+
+	<link rel="stylesheet" href="{{ asset('css/about.css') }}">
+{% endblock %}
 
 {% block body %}
-<div class="about-page">
-    <section class="about-header">
-        <h1>О нас</h1>
-        <p>Мы помогаем бизнесам расти в онлайн-пространстве.</p>
-    </section>
+	<main
+		class="about" itemscope itemtype="https://schema.org/WebPage">
+		{# Хлебные крошки #}
+		<nav class="about__breadcrumbs" aria-label="Хлебные крошки">
+			<ol class="about__breadcrumbs-list" itemscope itemtype="https://schema.org/BreadcrumbList">
+				<li class="about__breadcrumbs-item" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<a class="about__breadcrumbs-link" href="{{ path('app_home') }}" itemprop="item">
+						<span itemprop="name">Главная</span>
+					</a>
+					<meta itemprop="position" content="1"/>
+				</li>
+				<li class="about__breadcrumbs-item" aria-current="page" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+					<span class="about__breadcrumbs-current" itemprop="name">О нас</span>
+					<meta itemprop="position" content="2"/>
+				</li>
+			</ol>
+		</nav>
 
-    <section class="about-story">
-        <h2>Наша история</h2>
-        <p>Наша компания была основана в 2015 году с целью помочь малым и средним бизнесам улучшить свое присутствие в интернете. Мы работаем с такими компаниями, как "TechBoost", "GreenFarm", "HealthyEats", помогая им привлекать клиентов, увеличивать конверсии и масштабировать их бизнес.</p>
-        <p>В процессе работы мы создали индивидуальные стратегии продвижения, ориентированные на потребности каждого клиента, что принесло нам доверие и признание на рынке.</p>
-    </section>
+		{# Hero #}
+		<header class="about__header">
+			<h1 class="about__title" itemprop="name">О
+				{{ brand }}</h1>
+			<p class="about__lead" itemprop="description">
+				Мы помогаем бизнесам расти в онлайн-пространстве: делаем мини-сайты, размещаем объявления, настраиваем SEO и упрощаем связь с клиентами.
+			</p>
+			<div class="about__cta">
+				<a class="btn btn--primary" href="{{ path('user_page_create') }}">Создать мини-сайт</a>
+				<a class="btn btn--soft" href="{{ path('app_ads_new') }}">Подать объявление</a>
+			</div>
+		</header>
 
-    <section class="about-why">
-        <h2>Почему это важно?</h2>
-        <p>Цифровой маркетинг — это не просто тренд, а необходимость. Современный потребитель делает выбор, ориентируясь на информацию, которую он находит в интернете. Мы понимаем, как важно быть на виду у вашего клиента, и предлагаем вам самые эффективные решения для достижения ваших целей.</p>
-    </section>
+		{# История/миссия #}
+		<section class="about-section about-section--story" aria-labelledby="about-story">
+			<div class="about__grid">
+				<div class="about-card">
+					<h2 id="about-story" class="about-card__title">Наша история</h2>
+					<p class="about-card__text">
+						Платформа
+						{{ brand }}
+						появилась в 2015 году как простой способ для малого бизнеса заявить о себе в интернете.
+												          За это время мы помогли десяткам компаний — от
+						<strong>TechBoost</strong>
+						и
+						<strong>GreenFarm</strong>
+						до
+						<strong>HealthyEats</strong>
+						— наладить поток обращений и масштабировать продажи.
+					</p>
+					<p class="about-card__text">
+						Мы убеждены: современное продвижение — это ясная страница с контактами, понятная карта с маршрутом и доверие.
+												          Поэтому у каждого пользователя есть мини-сайт с кнопками
+						<em>Позвонить</em>,
+						<em>Написать</em>
+						и
+						<em>Маршрут</em>.
+					</p>
+				</div>
 
-    <section class="about-services">
-        <h2>Наши услуги</h2>
-        <ul>
-            <li>Разработка стратегии продвижения</li>
-            <li>SEO-оптимизация и контент-маркетинг</li>
-            <li>Продвижение в социальных сетях</li>
-            <li>Реклама в интернете</li>
-        </ul>
-    </section>
+				<aside class="about-facts" aria-label="Факты и доверие">
+					<div class="about-facts__item">
+						<div class="about-facts__num" aria-hidden="true">9+</div>
+						<div class="about-facts__label">лет на рынке</div>
+					</div>
+					<div class="about-facts__item">
+						<div class="about-facts__num" aria-hidden="true">10&nbsp;000+</div>
+						<div class="about-facts__label">обращений в год</div>
+					</div>
+					<div class="about-facts__item">
+						<div class="about-facts__num" aria-hidden="true">4.9/5</div>
+						<div class="about-facts__label">средний рейтинг</div>
+					</div>
+				</aside>
+			</div>
+		</section>
 
-    <section class="about-contact">
-        <h2>Свяжитесь с нами</h2>
-        <p>Если вы хотите обсудить, как мы можем помочь вашему бизнесу, свяжитесь с нами через форму обратной связи или по телефону.</p>
-        <a href="#" class="btn btn-primary">Связаться с нами</a>
-    </section>
-</div>
+		{# Почему это важно #}
+		<section class="about-section" aria-labelledby="about-why">
+			<h2 id="about-why" class="about-section__title">Почему это важно</h2>
+			<p class="about-section__text">
+				Цифровой маркетинг — это необходимость. Клиент выбирает там, где
+				<strong>нашёл вас быстрее</strong>,
+				<strong>прочитал понятное предложение</strong>
+				и
+				<strong>смог связаться в один клик</strong>.
+				{{ brand }}
+				закрывает все три задачи: видимость в поиске, ясная презентация и удобные контакты.
+			</p>
+		</section>
+
+		{# Услуги #}
+		<section class="about-section" aria-labelledby="about-services">
+			<h2 id="about-services" class="about-section__title">Что мы делаем</h2>
+			<ul class="about-list">
+				<li class="about-list__item">
+					<strong>Мини-сайт/страница компании</strong>
+					с телефоном, e-mail и кнопкой «Маршрут».</li>
+				<li class="about-list__item">
+					<strong>SEO-основа</strong>: мета-теги, превью в соцсетях, структурированные данные.</li>
+				<li class="about-list__item">
+					<strong>Продвижение</strong>
+					через тематические объявления и каталог.</li>
+				<li class="about-list__item">
+					<strong>Аналитика</strong>
+					и рекомендации для роста конверсии.</li>
+			</ul>
+
+			<div class="about__cta about__cta--inline">
+				<a class="btn btn--primary" href="{{ path('user_page_create') }}">Запустить страницу</a>
+				<a class="btn btn--soft" href="mailto:contact@expfr.com">Связаться с менеджером</a>
+			</div>
+		</section>
+
+		{# Отзывы / соц-доказательства (мини) #}
+		<section class="about-section" aria-labelledby="about-reviews">
+			<h2 id="about-reviews" class="about-section__title">Что говорят клиенты</h2>
+			<div class="about-quotes">
+				<figure class="about-quotes__item">
+					<blockquote class="about-quotes__text">«Собрали страницу за вечер, и уже на следующий день пришли первые звонки»</blockquote>
+					<figcaption class="about-quotes__author">Анна, HealthyEats</figcaption>
+				</figure>
+				<figure class="about-quotes__item">
+					<blockquote class="about-quotes__text">«Карта и кнопка “Маршрут” — половина клиентов приходит офлайн без лишних вопросов»</blockquote>
+					<figcaption class="about-quotes__author">Жюльен, GreenFarm</figcaption>
+				</figure>
+			</div>
+		</section>
+
+		{# FAQ (структурированные данные) #}
+		<section class="about-section" aria-labelledby="about-faq">
+			<h2 id="about-faq" class="about-section__title">Частые вопросы</h2>
+			<details class="about-faq">
+				<summary class="about-faq__q">Сколько времени занимает запуск?</summary>
+				<div class="about-faq__a">Обычно 10–15 минут: заполняете данные и публикуете страницу.</div>
+			</details>
+			<details class="about-faq">
+				<summary class="about-faq__q">Можно ли сразу указать адрес и маршрут?</summary>
+				<div class="about-faq__a">Да. Мы отображаем метку на карте, а кнопка «Открыть в картах» строит маршрут для клиента.</div>
+			</details>
+			<details class="about-faq">
+				<summary class="about-faq__q">Нужны ли технические навыки?</summary>
+				<div class="about-faq__a">Нет. Интерфейс понятный, а наши подсказки ведут по шагам.</div>
+			</details>
+		</section>
+
+		{# Главный CTA #}
+		<section class="about-cta-block" aria-labelledby="about-cta">
+			<h2 id="about-cta" class="about-cta-block__title">Готовы начать?</h2>
+			<p class="about-cta-block__text">Создайте страницу и появитесь в поиске — клиенты свяжутся с вами в один клик.</p>
+			<div class="about__cta">
+				<a class="btn btn--primary" href="{{ path('user_page_create') }}">Создать страницу</a>
+				<a class="btn btn--soft" href="mailto:pastmood@gmail.com">Задать вопрос</a>
+			</div>
+		</section>
+
+		{# JSON-LD: Organization + Breadcrumb + FAQ #}
+		<script type="application/ld+json">
+			{
+						    "@context":"https://schema.org",
+						    "@type":"Organization",
+						    "name":"{{ brand }}",
+						    "url":"{{ app.request.scheme ~ '://' ~ app.request.httpHost }}",
+						    "email":"pastmood@gmail.com",
+						    "sameAs":["https://t.me/ExpFRr"]
+						  }
+		</script>
+
+		<script type="application/ld+json">
+			{
+						    "@context":"https://schema.org",
+						    "@type":"BreadcrumbList",
+						    "itemListElement":[
+						      { "@type":"ListItem", "position":1, "name":"Главная", "item":"{{ path('app_home') }}" },
+						      { "@type":"ListItem", "position":2, "name":"О нас", "item":"{{ canonical }}" }
+						    ]
+						  }
+		</script>
+
+		<script type="application/ld+json">
+			{
+						    "@context":"https://schema.org",
+						    "@type":"FAQPage",
+						    "mainEntity":[
+						      { "@type":"Question", "name":"Сколько времени занимает запуск?",
+						        "acceptedAnswer": { "@type":"Answer", "text":"Обычно 10–15 минут: заполняете данные и публикуете страницу." } },
+						      { "@type":"Question", "name":"Можно ли сразу указать адрес и маршрут?",
+						        "acceptedAnswer": { "@type":"Answer", "text":"Да. Мы отображаем метку на карте, а кнопка «Открыть в картах» строит маршрут." } },
+						      { "@type":"Question", "name":"Нужны ли технические навыки?",
+						        "acceptedAnswer": { "@type":"Answer", "text":"Нет. Интерфейс понятный, а подсказки ведут по шагам." } }
+						    ]
+						  }
+		</script>
+	</main>
 {% endblock %}

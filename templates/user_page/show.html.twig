@@ -1,77 +1,259 @@
+{# templates/user_page/show.html.twig #}
 <!DOCTYPE html>
 <html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ userPage.title }}</title>
-    <meta name="keywords" content="{{ userPage.keywords }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-</head>
-<body>
-<div class="custom-header">
-    <div class="custom-nav">
-        <ul class="custom-nav-list">
-            <li><a href="#about">О нас</a></li>
-            <li><a href="#advantages">Преимущества</a></li>
-            <li><a href="#contacts">Контакты</a></li>
-            <li><a href="#mapPosition">Найди нас на карте</a></li>
-        </ul>
-        <a href="/" class="custom-back">Вернуться на площадку</a>
-    </div>
-</div>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
 
-<div class="custom-banner" style="background-image: url('{{ asset('uploads/' ~ userPage.bannerImg) }}');">
-    <div class="custom-overlay"></div>
-    <div class="custom-content">
-        <h1>{{ userPage.title }}</h1>
-        <p>{{ userPage.subtitle }}</p>
-    </div>
-</div>
+		<title>{{ userPage.title|default('Страница компании') }}</title>
+		<meta name="description" content="{{ userPage.subtitle|default(userPage.companyName|default('')) }}">
+		<meta
+		name="keywords" content="{{ userPage.keywords|default('') }}">
 
-<div id="about" class="custom-about">
-    <div class="custom-container">
-        <img src="{{ asset('uploads/' ~ userPage.image) }}" alt="О нас">
-        <div class="custom-text">
-            <h2>О нас</h2>
-            <p>{{ userPage.companyName }}</p>
-        </div>
-    </div>
-</div>
+		{# OG/Twitter #}
+		{% set ogImage = userPage.bannerImg ? asset('uploads/' ~ userPage.bannerImg) : (userPage.image ? asset('uploads/' ~ userPage.image) : null) %}
+		<meta property="og:type" content="website">
+		{% if userPage.title %}<meta property="og:title" content="{{ userPage.title }}">
+		{% endif %}
+		{% if userPage.subtitle %}<meta property="og:description" content="{{ userPage.subtitle }}">
+		{% endif %}
+		{% if ogImage %}<meta property="og:image" content="{{ ogImage }}">
+		{% endif %}
+		<meta name="twitter:card" content="summary_large_image">
+		{% if userPage.title %}<meta name="twitter:title" content="{{ userPage.title }}">
+		{% endif %}
+		{% if userPage.subtitle %}<meta name="twitter:description" content="{{ userPage.subtitle }}">
+		{% endif %}
+		{% if ogImage %}<meta name="twitter:image" content="{{ ogImage }}">
+		{% endif %}
 
-<div id="advantages" class="custom-advantages">
-    <h2>Наши преимущества</h2>
-    <div class="custom-advantage-container">
-        <div class="custom-advantage">
-            <div class="custom-icon">✔</div>
-            <p>{{ userPage.advantageOne }}</p>
-        </div>
-        <div class="custom-advantage">
-            <div class="custom-icon">✔</div>
-            <p>{{ userPage.advantageTwoo }}</p>
-        </div>
-        <div class="custom-advantage">
-            <div class="custom-icon">✔</div>
-            <p>{{ userPage.advantageThree }}</p>
-        </div>
-    </div>
-</div>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+		<link rel="stylesheet" href="{{ asset('css/user_page_public.css') }}">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+	</head>
 
-<div id="contacts" class="custom-contacts">
-    <h2>Контакты</h2>
-    <p><i class="fas fa-phone"></i> {{ userPage.phone }}</p>
-    <p><i class="fas fa-envelope"></i> {{ userPage.email }}</p>
-    <p><i class="fas fa-map-marker-alt"></i> {{ userPage.adress }}</p>
-    <div id="mapPosition" class="custom-map">
-        <iframe src="https://maps.google.com/maps?q={{ userPage.mapPosition }}&z=6&output=embed"></iframe>
-    </div>
-</div>
+	{# тема управляется JS через data-theme #}
+	<body class="page userpage" data-theme="auto">
+		<header class="header" id="top">
+			<div class="container header__row">
+				<button class="nav__toggle" id="navToggle" aria-label="Меню" aria-controls="navMenu" aria-expanded="false">☰</button>
 
-<div class="custom-footer">
-    <p>&copy; {{ "now"|date("Y") }} {{ userPage.companyName }}. Все права защищены.</p>
-</div>
+				{% set hasAdvantages = userPage.advantageOne or userPage.advantageTwoo or userPage.advantageThree %}
+				{% set hasContacts   = userPage.phone or userPage.email or userPage.adress %}
+				{% set hasMap        = userPage.mapPosition is defined and userPage.mapPosition is not empty %}
 
-</body>
+				<nav class="nav" aria-label="Основная навигация">
+					<ul class="nav__list" id="navMenu">
+						<li class="nav__item">
+							<a class="nav__link" href="#about">О нас</a>
+						</li>
+						{% if hasAdvantages %}
+							<li class="nav__item">
+								<a class="nav__link" href="#advantages">Преимущества</a>
+							</li>
+						{% endif %}
+						{% if hasContacts %}
+							<li class="nav__item">
+								<a class="nav__link" href="#contacts">Контакты</a>
+							</li>
+						{% endif %}
+						{% if hasMap %}
+							<li class="nav__item">
+								<a class="nav__link" href="#map">Карта</a>
+							</li>
+						{% endif %}
+					</ul>
+				</nav>
+
+				<div class="header__actions">
+					<button class="theme-toggle" id="themeToggle" aria-label="Сменить тему" aria-pressed="false" title="Сменить тему">🌓</button>
+					<a class="header__back" href="/">← На площадку</a>
+				</div>
+			</div>
+		</header>
+
+		{# HERO: фон задаём ИНЛАЙН (градиент + фото), без псевдоэлементов #}
+		{% set bannerUrl = userPage.bannerImg ? asset('uploads/' ~ userPage.bannerImg) : null %}
+		<section id="hero" class="hero{{ bannerUrl ? ' hero--bg' }}" {% if bannerUrl %} style="background-image:
+			                 linear-gradient(180deg, rgba(6,8,15,0.55) 0%, rgba(6,8,15,0.85) 100%),
+			                 url('{{ bannerUrl|e('html_attr') }}');" {% endif %}>
+			<div class="container hero__inner">
+				<div class="hero__content reveal">
+					<h1 class="hero__title">{{ userPage.title|default('') }}</h1>
+					{% if userPage.subtitle %}
+						<p class="hero__lead">{{ userPage.subtitle }}</p>
+					{% endif %}
+					<div class="hero__cta">
+						{% if userPage.phone %}
+							<a class="btn btn--primary" href="tel:{{ userPage.phone|replace({' ':''}) }}">Позвонить</a>
+						{% endif %}
+						{% if userPage.email %}
+							<a class="btn btn--soft" href="mailto:{{ userPage.email }}">Написать</a>
+						{% endif %}
+					</div>
+				</div>
+
+				{% if userPage.image %}
+					<picture class="hero__media reveal">
+						<img src="{{ asset('uploads/' ~ userPage.image) }}" alt="{{ userPage.companyName|default(userPage.title)|default('Изображение') }}" loading="lazy" class="hero__img img-loading">
+					</picture>
+				{% endif %}
+			</div>
+		</section>
+
+		<section id="about" class="section about">
+			<div class="container about__grid">
+				{% if userPage.image %}
+					<div class="about__media reveal">
+						<img src="{{ asset('uploads/' ~ userPage.image) }}" alt="{{ userPage.companyName|default('Фотография компании') }}" loading="lazy" class="about__img img-loading">
+					</div>
+				{% endif %}
+
+				<div class="about__body reveal">
+					<h2 class="section__title">О нас</h2>
+					<p class="about__text">{{ userPage.companyName|default('Наша компания') }}</p>
+
+					{% if userPage.keywords %}
+						<div class="tags" aria-label="Ключевые слова">
+							{% for kw in userPage.keywords|split(',')|slice(0,8) %}
+								{% set k = kw|trim %}
+								{% if k %}
+									<span class="tag">{{ k }}</span>
+								{% endif %}
+							{% endfor %}
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</section>
+
+		{% if hasAdvantages %}
+			<section id="advantages" class="section advantages">
+				<div class="container">
+					<h2 class="section__title">Наши преимущества</h2>
+					<div class="cards">
+						{% if userPage.advantageOne %}
+							<article class="card reveal">
+								<div class="card__icon" aria-hidden="true">★</div>
+								<h3 class="card__title">Преимущество</h3>
+								<p class="card__text">{{ userPage.advantageOne }}</p>
+							</article>
+						{% endif %}
+						{% if userPage.advantageTwoo %}
+							<article class="card reveal">
+								<div class="card__icon" aria-hidden="true">★</div>
+								<h3 class="card__title">Преимущество</h3>
+								<p class="card__text">{{ userPage.advantageTwoo }}</p>
+							</article>
+						{% endif %}
+						{% if userPage.advantageThree %}
+							<article class="card reveal">
+								<div class="card__icon" aria-hidden="true">★</div>
+								<h3 class="card__title">Преимущество</h3>
+								<p class="card__text">{{ userPage.advantageThree }}</p>
+							</article>
+						{% endif %}
+					</div>
+				</div>
+			</section>
+		{% endif %}
+
+		{# CONTACTS + MAP + ROUTE BUTTONS #}
+		{% set coords = hasMap ? userPage.mapPosition|split(',') : [] %}
+		{% set lat = hasMap and coords|length >= 2 ? coords[0]|trim : null %}
+		{% set lng = hasMap and coords|length >= 2 ? coords[1]|trim : null %}
+		{% set dest = lat and lng ? (lat ~ ',' ~ lng) : (userPage.adress|default('')) %}
+		{% set q = dest ? dest|url_encode : '' %}
+
+		{% if hasContacts or hasMap %}
+			<section id="contacts" class="section contacts">
+				<div class="container contacts__grid">
+					<div class="contacts__info reveal">
+						<h2 class="section__title">Контакты</h2>
+						<ul class="list">
+							{% if userPage.phone %}
+								<li class="list__item">
+									<span class="list__label">Телефон:</span>
+									<a href="tel:{{ userPage.phone|replace({' ':''}) }}">{{ userPage.phone }}</a>
+								</li>
+							{% endif %}
+							{% if userPage.email %}
+								<li class="list__item">
+									<span class="list__label">Email:</span>
+									<a href="mailto:{{ userPage.email }}">{{ userPage.email }}</a>
+								</li>
+							{% endif %}
+							{% if userPage.adress %}
+								<li class="list__item">
+									<span class="list__label">Адрес:</span>
+									<span>{{ userPage.adress }}</span>
+								</li>
+							{% endif %}
+						</ul>
+
+						{# если карты нет, но адрес/координаты есть — покажем кнопки тут #}
+						{% if (not hasMap) and q %}
+							<div class="map-actions" aria-label="Как добраться">
+								<a class="btn btn--soft" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination={{ q }}">Google Maps</a>
+								<a class="btn btn--soft" target="_blank" rel="noopener" href="https://maps.apple.com/?daddr={{ q }}">Apple Maps</a>
+								<a class="btn btn--soft" target="_blank" rel="noopener" href="https://yandex.ru/maps/?rtext=~{{ q }}&rtt=auto">Яндекс.Карты</a>
+							</div>
+						{% endif %}
+					</div>
+
+					{% if hasMap %}
+						<div class="contacts__map reveal">
+							<div id="map" class="map" data-coords="{{ lat ~ ',' ~ lng }}">
+								<div class="map__skeleton">Загружаем карту…</div>
+							</div>
+							{% if q %}
+								<div class="map-actions" aria-label="Как добраться">
+									<a class="btn btn--soft" target="_blank" rel="noopener" href="https://www.google.com/maps/dir/?api=1&destination={{ q }}">Открыть в Google Maps</a>
+									<a class="btn btn--soft" target="_blank" rel="noopener" href="https://maps.apple.com/?daddr={{ q }}">Открыть в Apple Maps</a>
+									<a class="btn btn--soft" target="_blank" rel="noopener" href="https://yandex.ru/maps/?rtext=~{{ q }}&rtt=auto">Открыть в Яндекс.Картах</a>
+								</div>
+							{% endif %}
+						</div>
+					{% endif %}
+				</div>
+			</section>
+		{% endif %}
+
+		<footer class="footer">
+			<div class="container footer__row">
+				<div class="footer__copy">©
+					{{ "now"|date("Y") }}
+					{{ userPage.companyName|default(userPage.title)|default('') }}</div>
+				<a class="header__back" href="{{ path('app_profile') }}">← В профиль</a>
+			</div>
+		</footer>
+
+		{# JSON-LD (без падений) #}
+		{% set ld = {
+      '@context':'https://schema.org',
+      '@type':'LocalBusiness',
+      'name': userPage.companyName|default(userPage.title|default('')),
+      'url': app is defined and app.request ? app.request.uri : ''
+    } %}
+		{% if ogImage %}
+			{% set ld = ld|merge({'image': ogImage}) %}
+		{% endif %}
+		{% if userPage.phone %}
+			{% set ld = ld|merge({'telephone': userPage.phone}) %}
+		{% endif %}
+		{% if userPage.email %}
+			{% set ld = ld|merge({'email': userPage.email}) %}
+		{% endif %}
+		{% if userPage.adress %}
+			{% set ld = ld|merge({'address': {'@type':'PostalAddress','streetAddress': userPage.adress}}) %}
+		{% endif %}
+		{% if hasMap %}
+			{% set ld = ld|merge({'geo': {'@type':'GeoCoordinates','latitude': lat,'longitude': lng}}) %}
+		{% endif %}
+		<script type="application/ld+json">{{ ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+
+		<script defer src="{{ asset('js/user_page_public.js') }}"></script>
+	</body>
 </html>

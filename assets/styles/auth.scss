@@ -1,0 +1,138 @@
+/* ===== Auth (Reset/Forgot/Check) ===== */
+.auth {
+  background: var(--bg);
+  min-height: min(100vh, 1200px);
+  display: grid;
+  align-items: center;
+  padding: 40px 0;
+}
+
+.auth__card {
+  margin: 0 auto;
+  width: 100%;
+  max-width: 560px;
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 28px rgba(2, 6, 23, 0.06);
+  padding: 24px;
+}
+
+.auth__title {
+  font-size: clamp(20px, 3vw, 28px);
+  font-weight: 900;
+  letter-spacing: 0.2px;
+  color: var(--text);
+  margin: 4px 0 8px;
+}
+
+.auth__hint {
+  color: var(--muted);
+  margin: 0 0 14px;
+}
+
+.auth__small {
+  color: #64748b;
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.auth__link {
+  color: var(--text);
+  text-underline-offset: 2px;
+}
+.auth__link:hover {
+  color: var(--brand);
+}
+
+.auth__notice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px dashed var(--stroke);
+  border-radius: 12px;
+  background: #fff;
+  margin-bottom: 10px;
+}
+.auth__notice-text {
+  color: #334155;
+  font-weight: 600;
+}
+.auth__notice-link {
+  text-decoration: none;
+  color: var(--text);
+  font-weight: 800;
+}
+.auth__notice-link:hover {
+  color: var(--brand);
+}
+
+.auth__form {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.auth__label {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.auth__input {
+  height: 46px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+  outline: none;
+  background: #fff;
+  color: var(--text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+}
+.auth__input::placeholder {
+  color: #94a3b8;
+}
+.auth__input:focus {
+  border-color: color-mix(in srgb, var(--ring) 50%, var(--stroke));
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--ring) 22%, transparent);
+}
+
+.auth__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+/* Сообщения */
+.auth__error {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #7f1d1d;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+.auth__success {
+  background: #dcfce7;
+  border: 1px solid #bbf7d0;
+  color: #065f46;
+  border-radius: 12px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  font-weight: 700;
+}
+
+/* Адаптив */
+@media (max-width: 720px) {
+  .auth {
+    padding: 28px 0;
+  }
+  .auth__card {
+    padding: 18px;
+    border-radius: 14px;
+  }
+}

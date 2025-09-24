@@ -1,0 +1,40 @@
+<div class="wizard-pane {{ active ? 'is-active' }}" data-step="1" role="tabpanel">
+	<div class="ui-card">
+		<div class="ui-tip">
+			<strong>Баннер</strong>
+			— шапка на всю ширину. Рекомендуемое соотношение ≈
+			<b>16:6</b>
+			(1600×600 / 1920×720).<br>
+			<strong>Изображение страницы</strong>
+			— основная картинка, ориентир
+			<b>1200×800</b>+. Форматы: JPEG/PNG/WebP, до
+			<b>5&nbsp;МБ</b>.
+		</div>
+
+		<div class="ui-field {{ form_errors(form.bannerImg) ? 'ui-field--error' }}">
+			{{ form_label(form.bannerImg, 'Изображение баннера', { label_attr: { class: 'ui-field__label' } }) }}
+			{{ form_widget(form.bannerImg, { attr: { class: 'ui-file', accept: 'image/jpeg,image/png,image/gif,image/webp', 'data-preview': '#bannerPreview', 'data-max': '5242880', 'data-role': 'file-banner' } }) }}
+			<div id="bannerPreview" class="ui-preview" aria-hidden="false">
+				{% if stored.bannerImg is defined and stored.bannerImg %}
+					<img src="{{ asset('uploads/' ~ stored.bannerImg) }}" class="ui-preview__img" alt="Баннер">
+				{% endif %}
+			</div>
+			{% if form_errors(form.bannerImg) %}
+				<div class="ui-field__errors">{{ form_errors(form.bannerImg) }}</div>
+			{% endif %}
+		</div>
+
+		<div class="ui-field {{ form_errors(form.image) ? 'ui-field--error' }}">
+			{{ form_label(form.image, 'Изображение страницы', { label_attr: { class: 'ui-field__label' } }) }}
+			{{ form_widget(form.image, { attr: { class: 'ui-file', accept: 'image/jpeg,image/png,image/gif,image/webp', 'data-preview': '#imagePreview', 'data-max': '5242880', 'data-role': 'file-main' } }) }}
+			<div id="imagePreview" class="ui-preview" aria-hidden="false">
+				{% if stored.image is defined and stored.image %}
+					<img src="{{ asset('uploads/' ~ stored.image) }}" class="ui-preview__img" alt="Изображение">
+				{% endif %}
+			</div>
+			{% if form_errors(form.image) %}
+				<div class="ui-field__errors">{{ form_errors(form.image) }}</div>
+			{% endif %}
+		</div>
+	</div>
+</div>

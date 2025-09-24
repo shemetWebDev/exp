@@ -1,50 +1,160 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ads{% endblock %}
+{% block title %}Объявление
+	{{ ad.id }}
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/ad.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>Ads</h1>
+	{% set images = [] %}
+	{% if ad.photos is defined and ad.photos is iterable and ad.photos|length > 0 %}
+		{% set images = ad.photos %}
+	{% elseif ad.photos is defined and ad.photos is not iterable and ad.photos %}
+		{% set images = [ad.photos] %}
+	{% elseif ad.photo is defined and ad.photo %}
+		{% set images = [ad.photo] %}
+	{% endif %}
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ ad.id }}</td>
-            </tr>
-            <tr>
-                <th>Title</th>
-                <td>{{ ad.title }}</td>
-            </tr>
-            <tr>
-                <th>Description</th>
-                <td>{{ ad.description }}</td>
-            </tr>
-            <tr>
-                <th>Price</th>
-                <td>{{ ad.price }}</td>
-            </tr>
-            <tr>
-                <th>City</th>
-                <td>{{ ad.city }}</td>
-            </tr>
-            <tr>
-                <th>Poste_code</th>
-                <td>{{ ad.posteCode }}</td>
-            </tr>
-            <tr>
-                <th>Reating</th>
-                <td>{{ ad.reating }}</td>
-            </tr>
-            <tr>
-                <th>Created_at</th>
-                <td>{{ ad.createdAt ? ad.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Updated_at</th>
-                <td>{{ ad.updatedAt ? ad.updatedAt|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-        </tbody>
-    </table>
+	<div
+		class="ad-page">
 
-    <a href="{{ path('app_ads_index') }}">back to list</a>
+		{# HERO: заголовок + цена + мета (всегда над фолдом) #}
+		<header class="ad-hero">
+			<h1 class="ad-hero__title">{{ ad.title }}</h1>
+			<div class="ad-hero__price">
+				{% if ad.price is not null %}
+					{{ ad.price }}
+					€{% else %}—
+				{% endif %}
+			</div>
+			<div class="ad-hero__meta">
+				<div class="ad-hero__meta">
+					<span>{{ ad.city }}
+						{% if ad.posteCode %}
+							({{ ad.posteCode }})
+						{% endif %}
+					</span>
+
+					<span class="ad-hero__views" title="Просмотры">
+						просмотров 👁
+						{{ ad.views }}</span>
+				</div>
+				<span class="ad-hero__dot">•</span>
+				<time datetime="{{ ad.createdAt ? ad.createdAt|date('c') : '' }}">
+					Создано:
+					{{ ad.createdAt ? ad.createdAt|date('d.m.Y H:i') : '' }}
+				</time>
+				<span class="ad-hero__dot">•</span>
+				{# ← лайк: сердечко + счётчик #}
+				{% include 'ads/_like.html.twig' with { ad: ad } %}
+			</div>
+
+			{# короткий лид из описания — чтобы текст был виден сразу #}
+			{% set lead = ad.description ? ad.description|striptags|trim|slice(0, 140) ~ (ad.description|length > 140 ? '…' : '') : '' %}
+			{% if lead %}
+				<p class="ad-hero__lead">{{ lead }}</p>
+			{% endif %}
+		</header>
+
+		{# MAIN: 2 колонки — слева галерея+описание, справа summary-экшены #}
+		<div class="ad-main">
+
+			<div
+				class="ad-left">
+
+				{# === ГАЛЕРЕЯ === #}
+				<section class="ad-gallery" data-gallery>
+					{% if images|length > 0 %}
+						<div class="ad-gallery__stage" aria-live="polite">
+							{% for src in images %}
+								<div class="ad-gallery__slide{% if loop.first %} is-active{% endif %}" data-index="{{ loop.index0 }}">
+									<img class="ad-gallery__img" src="{{ asset('uploads/ads/' ~ src) }}" alt="{{ ad.title ~ ' — фото ' ~ loop.index ~ ' из ' ~ images|length }}" loading="lazy" draggable="false"/>
+								</div>
+							{% endfor %}
+							{% if images|length > 1 %}
+								<button type="button" class="ad-gallery__nav ad-gallery__nav--prev" data-prev aria-label="Предыдущее фото">‹</button>
+								<button type="button" class="ad-gallery__nav ad-gallery__nav--next" data-next aria-label="Следующее фото">›</button>
+							{% endif %}
+						</div>
+
+						{% if images|length > 1 %}
+							<div class="ad-gallery__thumbs" role="tablist">
+								{% for src in images %}
+									<button type="button" class="ad-gallery__thumb{% if loop.first %} is-active{% endif %}" data-go="{{ loop.index0 }}" role="tab" aria-selected="{{ loop.first ? 'true' : 'false' }}">
+										<img src="{{ asset('uploads/ads/' ~ src) }}" alt="Миниатюра {{ loop.index }}">
+									</button>
+								{% endfor %}
+							</div>
+						{% endif %}
+					{% else %}
+						<div class="ad-gallery__placeholder">
+							<svg class="ad-gallery__ph-icon" viewbox="0 0 24 24" aria-hidden="true">
+								<path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14m18 0H3m18 0v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1m14-8-3 3-2-2-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+							</svg>
+						</div>
+					{% endif %}
+				</section>
+
+				{# === ОПИСАНИЕ === #}
+				{% if ad.description %}
+					<section class="ad-details">
+						<h2 class="ad-details__title">Описание</h2>
+						<p class="ad-details__text">{{ ad.description }}</p>
+					</section>
+				{% endif %}
+			</div>
+
+			{# === SUMMARY/ЭКШЕНЫ (sticky) === #}
+			<aside class="ad-summary">
+				<div class="ad-summary__card">
+					<div class="ad-summary__price">
+						{% if ad.price is not null %}
+							{{ ad.price }}
+							€{% else %}—
+						{% endif %}
+					</div>
+					<div class="ad-summary__meta">
+						{{ ad.city }}
+						{% if ad.posteCode %}
+							({{ ad.posteCode }})
+						{% endif %}
+					</div>
+
+					<div class="ad-summary__actions">
+						<a href="{{ path('app_ads_index') }}" class="btn btn--soft">← Назад</a>
+
+						{% if app.user and (is_granted('ROLE_ADMIN') 
+    or (ad.user is defined and ad.user == app.user) 
+    or (ad.owner is defined and ad.owner == app.user) 
+    or (ad.author is defined and ad.author == app.user)) %}
+
+							<form method="post" action="{{ path('app_ads_delete', {'id': ad.id}) }}" onsubmit="return confirm('Вы уверены, что хотите удалить объявление?');" class="ad-delete-form">
+								<input type="hidden" name="_token" value="{{ csrf_token('delete' ~ ad.id) }}">
+								<button type="submit" class="btn btn--danger-soft">Удалить</button>
+							</form>
+						{% endif %}
+					</div>
+				</div>
+			</aside>
+
+		</div>
+	</div>
+
+	{# Лайтбокс #}
+	<div class="ad-lightbox" data-lightbox hidden>
+		<button type="button" class="ad-lightbox__close" data-close aria-label="Закрыть">×</button>
+		<img class="ad-lightbox__img" alt="Просмотр изображения">
+		<button type="button" class="ad-lightbox__arrow ad-lightbox__arrow--prev" data-lb-prev aria-label="Предыдущее">‹</button>
+		<button type="button" class="ad-lightbox__arrow ad-lightbox__arrow--next" data-lb-next aria-label="Следующее">›</button>
+	</div>
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script src="{{ asset('js/ad.js') }}"></script>
+	<script src="{{ asset('js/like.js') }}"></script>
 {% endblock %}

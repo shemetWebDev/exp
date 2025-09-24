@@ -1,33 +1,64 @@
+{# templates/article/index.html.twig #}
 {% extends 'base.html.twig' %}
 
-{% block title %}📄 Список статей{% endblock %}
+{% block title %}📄 Список статей
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/articles.css') }}">
+{% endblock %}
 
 {% block body %}
-    <h1>📚 Документы</h1>
+	<section class="docs">
+		<div class="container">
+			<header class="docs__head">
+				<h1 class="docs__title">📚 Документы и статьи</h1>
+				<p class="docs__lead">Актуальные материалы платформы.</p>
+			</header>
 
-    {% for article in articles %}
-        <div class="article" style="border:1px solid #ddd; padding:15px; margin-bottom:20px;">
-            <h2>{{ article.title }}</h2>
-            <p>{{ article.description }}</p>
+			{# CTA: добавить статью — контакты администратора #}
+			<div class="docs__cta">
+				<article class="cta-card" aria-labelledby="cta-title">
+					<div class="cta-card__body">
+						<h2 id="cta-title" class="cta-card__title">Хотите добавить статью?</h2>
+						<p class="cta-card__text">
+							Свяжитесь с администратором — отправьте материал на&nbsp;e-mail или в&nbsp;Telegram.
+						</p>
+					</div>
+					<div class="cta-card__actions">
+						<a class="btn btn--soft" href="mailto:pastmood@gmail.com">E-mail</a>
+						<a class="btn btn--soft" href="https://t.me/ExpFRr" target="_blank" rel="noopener">Telegram</a>
+					</div>
+				</article>
+			</div>
 
-            {% if isLoggedIn %}
-                <h4>📁 Документы:</h4>
-                <ul>
-                    {% for document in article.documents %}
-                        <li>
-                            <a href="/uploads/pdf/{{ document.path }}" target="_blank">
-                                {{ document.path }}
-                            </a>
-                        </li>
-                    {% else %}
-                        <li>Нет прикрепленных документов.</li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p><strong>⚠️ Чтобы видеть документы, <a href="{{ path('app_login') }}">войдите</a> или <a href="{{ path('app_register') }}">зарегистрируйтесь</a>.</strong></p>
-            {% endif %}
-        </div>
-    {% else %}
-        <p>❌ Нет доступных статей.</p>
-    {% endfor %}
+			{% if articles is empty %}
+				<div class="docs__empty">Пока нет опубликованных материалов.</div>
+			{% else %}
+				<div class="docs__list">
+					{% for article in articles %}
+						<article class="card-doc" aria-labelledby="doc-{{ loop.index }}-title">
+							<header class="card-doc__head">
+								<h2 id="doc-{{ loop.index }}-title" class="card-doc__title">{{ article.title }}</h2>
+								{% if article.createAt %}
+									<time class="card-doc__date" datetime="{{ article.createAt|date('c') }}">{{ article.createAt|date('d.m.Y') }}</time>
+								{% endif %}
+							</header>
+
+							{% if article.description %}
+								<p class="card-doc__excerpt">
+									{{ article.description|striptags|trim|slice(0, 180) ~ (article.description|length > 180 ? '…' : '') }}
+								</p>
+							{% endif %}
+
+							<div class="card-doc__actions">
+								<a class="btn btn--soft" href="{{ path('article_show', {'id': article.id}) }}">Смотреть полностью →</a>
+							</div>
+						</article>
+					{% endfor %}
+				</div>
+			{% endif %}
+		</div>
+	</section>
 {% endblock %}

@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Enum\Payed;
 use App\Repository\AdsRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -51,6 +53,25 @@ class Ads
 
     #[ORM\Column(length: 255)]
     private ?string $region = null;
+
+    #[ORM\Column(type: 'integer', options: ['default' => 0])]
+    private int $views = 0;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    private ?array $photos = [];
+
+    /**
+     * @var Collection<int, AdsLike>
+     */
+    #[ORM\OneToMany(targetEntity: AdsLike::class, mappedBy: 'ads', orphanRemoval: true)]
+    private Collection $likes;
+
+
+
+    public function __construct()
+    {
+        $this->likes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -198,6 +219,72 @@ class Ads
     {
         $this->region = $region;
 
+        return $this;
+    }
+
+    public function getPhotos(): array
+    {
+        return $this->photos ?? [];
+    }
+    public function setPhotos(?array $photos): self
+    {
+        $this->photos = $photos ?: [];
+        return $this;
+    }
+
+    public function addPhoto(string $name): self
+    {
+        $arr = $this->getPhotos();
+        if (!in_array($name, $arr, true)) {
+            $arr[] = $name;
+            $this->photos = $arr;
+        }
+        return $this;
+    }
+    public function removePhoto(string $name): self
+    {
+        $this->photos = array_values(array_filter($this->getPhotos(), fn($n) => $n !== $name));
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AdsLike>
+     */
+    public function getLikes(): Collection
+    {
+        return $this->likes;
+    }
+
+    public function addLike(AdsLike $like): static
+    {
+        if (!$this->likes->contains($like)) {
+            $this->likes->add($like);
+            $like->setAds($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLike(AdsLike $like): static
+    {
+        if ($this->likes->removeElement($like)) {
+            // set the owning side to null (unless already changed)
+            if ($like->getAds() === $this) {
+                $like->setAds(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getViews(): int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $v): self
+    {
+        $this->views = $v;
         return $this;
     }
 }

@@ -1,0 +1,25 @@
+{% set total = 5 %}
+{% set pct = (step / (total - 1.0) * 100) | round(0, 'floor') %}
+
+<div class="wizard-head">
+  <div class="wizard-head__progress">
+    <div class="wizard-head__bar" style="width: {{ pct }}%;"></div>
+  </div>
+
+  <div class="wizard-steps" role="tablist" aria-label="Шаги формы">
+    {% set tabs = ['1. Основное','2. Изображения','3. Преимущества','4. Контакты','5. Карта'] %}
+    {% for i, label in tabs %}
+      <button type="submit"
+              name="nav"
+              value="{{ i <= step ? 'next' : '' }}"
+              formaction="#"
+              class="wizard-steps__step {{ step == i ? 'is-active' }}"
+              data-step="{{ i }}"
+              role="tab"
+              aria-selected="{{ step == i ? 'true' : 'false' }}"
+              disabled>
+        {{ label }}
+      </button>
+    {% endfor %}
+  </div>
+</div>

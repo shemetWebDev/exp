@@ -1,54 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.8/dist/css/splide.min.css">
-     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJxL6+IuL9zC2I8D+M9LbOFxyvC7yFqkNhGk98Sv1SY+U6h0k0qVg19bt+FG" crossorigin="anonymous">
-    {% block stylesheets %}
-        {{ encore_entry_link_tags('app') }}
-    {% endblock %}
-</head>
-<body>
-    <!-- Header (Navbar) -->
-    <header class="header">
-        <div class="header__logo">
-            <img src="{{ asset('images/horizontal-logo.png') }}" alt="exapts_france, мигранты Франция изображение">
-        </div>
-        <div class="header__nav">
-                <a class="header__nav-link" href="/" >Home</a>
-                <a class="header__nav-link" href="{{path('app_ads_index')}}" >Объявления</a>
-                <a class="header__nav-link" href="{{path('article_list')}}" >Документы</a>
-                <a class="header__nav-link" href="{{path('about_page')}}" >О нас</a>
-               <a class="header__nav-link--logIn" href="{{ app.user ? path('app_profile') : path('app_login') }}">
-    <img src="{{ asset('images/icons8-connexion-50.png') }}" alt="expats, доска обьявлений франция войти">
-    {{ app.user ? 'Профиль' : 'Войти' }}
-</a>
-        </div> 
-             <a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="header__logIn-link">Подать обьявление</a>
-    </header>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.8/dist/css/splide.min.css">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEJxL6+IuL9zC2I8D+M9LbOFxyvC7yFqkNhGk98Sv1SY+U6h0k0qVg19bt+FG" crossorigin="anonymous">
 
-    <!-- Body content -->
-    <div class="container mt-5">
-        {% block body %}{% endblock %}
-    </div>
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
+	</head>
+	<body>
+		<!-- Header (Navbar) -->
+		<header class="site-header">
+			<div class="site-header__container">
+				<a href="{{ path('app_home')|default('/') }}" class="site-header__logo" aria-label="ExpFR">
+					<img src="{{ asset('images/horizontal-logo.png') }}" alt="ExpFR">
+				</a>
 
-    <!-- Footer -->
-    <footer class="bg-dark text-white text-center py-3">
-        <p>&copy; 2025 MyApp. All rights reserved.</p>
-    </footer>
+				{# desktop-меню (прячется на мобильных) #}
+				<nav class="site-nav site-nav--desktop">
+					<a class="site-nav__link" href="{{ path('app_home')|default('/') }}">Home</a>
+					<a class="site-nav__link" href="{{ path('app_ads_index') }}">Объявления</a>
+					<a class="site-nav__link" href="{{ path('article_list') }}">Документы</a>
+					<a class="site-nav__link" href="{{ path('about_page') }}">О нас</a>
+				</nav>
 
-    {% block javascripts %}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-   <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&callback=initMap&libraries=places" async defer></script>
+				<div class="site-header__actions">
+					<a class="site-header__icon-btn" href="{{ app.user ? path('app_profile') : path('app_login') }}" aria-label="{{ app.user ? 'Профиль' : 'Войти' }}">
+						<img src="{{ asset('images/icons8-connexion-50.png') }}" alt="" aria-hidden="true">
+					</a>
 
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.8/dist/js/splide.min.js"></script>
-     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybL2XZA1N2oFf2xvYtuUt3A5iN8rbwz+9ctPA1TzXayV+bslt" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-pzjw8f+ua7Kw1TIq0Qqvyl5rMVO/BPANYsK5d66A7yDFF+uaAflQgCwsus6obH0Z" crossorigin="anonymous"></script>
-        {{ encore_entry_script_tags('app') }}
-        {% block importmap %}{{ importmap('app') }}{% endblock %}
-    {% endblock %}
-</body>
+					<a class="site-header__cta" href="{{ app.user ? path('app_ads_new') : path('app_login') }}">
+						<svg class="site-header__cta-icon" viewbox="0 0 24 24" aria-hidden="true">
+							<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+						</svg>
+						<span class="site-header__cta-text">Подать объявление</span>
+					</a>
+				</div>
+			</div>
+		</header>
+
+		<!-- Body content -->
+		<div>
+			{% block body %}{% endblock %}
+		</div>
+		<a class="fab-post" href="{{ app.user ? path('app_ads_new') : path('app_login') }}" aria-label="Подать объявление">
+			<svg viewbox="0 0 24 24" aria-hidden="true">
+				<path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+			</svg>
+		</a>
+		<!-- Footer -->
+		{# Мобильная панель навигации, показывается только на телефонах #}
+		{% set R = app.request.attributes.get('_route')|default('') %}
+		<nav class="mobile-bar" aria-label="Главное меню">
+			<a class="mobile-bar__item {{ R starts with 'app_home' ? 'is-active' : '' }}" href="{{ path('app_home')|default('/') }}">
+				<svg viewbox="0 0 24 24" class="mobile-bar__icon" aria-hidden="true">
+					<path d="M3 11.5 12 4l9 7.5v7a1.5 1.5 0 0 1-1.5 1.5h-5V14h-5v6H4.5A1.5 1.5 0 0 1 3 18.5v-7z" fill="currentColor"/>
+				</svg>
+				<span>Home</span>
+			</a>
+
+			<a class="mobile-bar__item {{ R starts with 'app_ads_' ? 'is-active' : '' }}" href="{{ path('app_ads_index') }}">
+				<svg viewbox="0 0 24 24" class="mobile-bar__icon" aria-hidden="true">
+					<path d="M4 5h16v3H4zM4 10h16v3H4zM4 15h16v3H4z" fill="currentColor"/>
+				</svg>
+				<span>Объявления</span>
+			</a>
+
+			<a class="mobile-bar__item {{ R starts with 'article_' ? 'is-active' : '' }}" href="{{ path('article_list') }}">
+				<svg viewbox="0 0 24 24" class="mobile-bar__icon" aria-hidden="true">
+					<path d="M6 3h9l5 5v13H6zM15 3v5h5" fill="none" stroke="currentColor" stroke-width="2"/>
+					<path d="M8 13h8M8 17h8M8 9h4" stroke="currentColor" stroke-width="2"/>
+				</svg>
+				<span>Документы</span>
+			</a>
+
+			<a class="mobile-bar__item {{ R starts with 'about_' ? 'is-active' : '' }}" href="{{ path('about_page') }}">
+				<svg viewbox="0 0 24 24" class="mobile-bar__icon" aria-hidden="true">
+					<path d="M12 11v7M12 7h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+					<circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" stroke-width="2"/>
+				</svg>
+				<span>О нас</span>
+			</a>
+		</nav>
+		<footer class="bg-dark text-white text-center py-3">
+			<p>&copy; 2025 ExpFR. All rights reserved.</p>
+			<div class="update_email">
+				<a href="mailto:contact@expfr.com" class="update_emailLink">pastmood@gmail.com</a>
+			</div>
+		</footer>
+
+		{% block javascripts %}
+			<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+			<script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&callback=initMap&libraries=places" async defer></script>
+
+
+			{{ encore_entry_script_tags('app') }}
+			{% block importmap %}
+				{{ importmap('app') }}
+			{% endblock %}
+		{% endblock %}
+	</body>
 </html>

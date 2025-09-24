@@ -5,6 +5,7 @@ set -e
 
 # Définir le dossier du projet (où le script est exécuté)
 PROJECT_DIR="$(pwd)"
+GIT_REPO="git@github.com:shemetWebDev/exp.git"
 COMPOSER_PATH="/home/expfr539/composer.phar"
 
 echo "📍 Répertoire du projet : $PROJECT_DIR"
@@ -18,7 +19,7 @@ if [ -d "$PROJECT_DIR/.git" ]; then
     git stash push -m "Sauvegarde temporaire" --keep-index
     
     # Mettre à jour le repo sans toucher au fichier .env
-    git pull origin master
+    git pull origin main
     
     # Restaurer les modifications locales
     git stash pop || echo "ℹ️ Aucun changement à restaurer"
@@ -36,7 +37,7 @@ else
     git init
     git remote add origin "$GIT_REPO"
     git fetch origin
-    git checkout -t origin/master
+    git checkout -t origin/main
 fi
 
 # Supprimer le cache manuellement avant d'exécuter Composer

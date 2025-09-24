@@ -1,0 +1,434 @@
+/* Использует ваши :root переменные */
+.wizard {
+  background: var(--bg);
+  padding: 40px 0;
+
+  &__title {
+    font-size: clamp(24px, 3vw, 36px);
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 16px;
+    color: var(--text);
+  }
+
+  &__notice {
+    max-width: 740px;
+    margin: 0 auto 24px;
+    padding: 14px 16px;
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    text-align: center;
+  }
+
+  &__form {
+    max-width: var(--container);
+    margin: 0 auto;
+  }
+
+  &__map {
+    height: 360px;
+    border-radius: var(--radius);
+    border: 1px solid var(--stroke);
+    overflow: hidden;
+  }
+  &__coord {
+    margin-top: 10px;
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--stroke);
+    border-radius: 10px;
+    background: #fff;
+  }
+}
+
+/* Голова визарда */
+.wizard-head {
+  max-width: var(--container);
+  margin: 0 auto 14px;
+
+  &__progress {
+    width: 100%;
+    height: 6px;
+    background: #ecf1f7;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 8px;
+  }
+  &__bar {
+    width: 0%;
+    height: 100%;
+    background: var(--brand);
+    transition: width 0.25s ease;
+  }
+}
+
+.wizard-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+
+  &__step {
+    padding: 10px 14px;
+    border: 1px solid var(--stroke);
+    border-radius: 999px;
+    background: #fff;
+    color: var(--text);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+    cursor: pointer;
+    transition: filter 0.2s ease, background 0.2s ease, color 0.2s ease,
+      border-color 0.2s ease;
+    &:hover {
+      filter: brightness(1.03);
+    }
+    &.is-active {
+      background: var(--brand);
+      color: #fff;
+      border-color: var(--brand);
+      box-shadow: 0 10px 24px color-mix(in srgb, var(--brand) 28%, transparent);
+    }
+  }
+}
+
+.wizard-content {
+  max-width: var(--container);
+  margin: 0 auto;
+}
+.wizard-pane {
+  display: none;
+}
+.wizard-pane.is-active {
+  display: block;
+  animation: fade 0.2s ease;
+}
+@keyframes fade {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.wizard-actions {
+  max-width: var(--container);
+  margin: 18px auto 0;
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  .d-none {
+    display: none !important;
+  }
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+/* Карточка шага */
+.ui-card {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+}
+
+/* Поля / инпуты */
+.ui-field {
+  margin-bottom: 14px;
+}
+.ui-field__label {
+  display: block;
+  font-weight: 800;
+  margin-bottom: 6px;
+  color: var(--text);
+}
+.ui-field__help {
+  margin-top: 6px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.ui-field__hint {
+  margin-top: 4px;
+  color: #475569;
+  font-size: 12px;
+}
+.ui-field__counter {
+  margin-top: 6px;
+  color: #64748b;
+  font-size: 12px;
+  text-align: right;
+}
+
+.ui-input {
+  display: block;
+  width: 100%;
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--text);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease,
+    background 0.15s ease;
+  outline: none;
+}
+.ui-input:focus {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 25%, transparent);
+}
+.ui-input.is-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+.ui-file {
+  display: block;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px dashed var(--stroke);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--muted);
+}
+.ui-file.is-invalid {
+  border-color: #ef4444;
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.12);
+}
+
+/* Превью изображений */
+.ui-preview {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+.ui-preview__img {
+  width: 100%;
+  max-height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid var(--stroke);
+}
+
+/* Ошибки */
+.ui-field__errors {
+  margin-top: 6px;
+  font-size: 13px;
+  color: #991b1b;
+  background: #fff1f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.ui-field--error .ui-input,
+.ui-field--error .ui-file {
+  border-color: #ef4444;
+}
+
+.wizard-alert {
+  max-width: var(--container);
+  margin: 0 auto 12px;
+  padding: 12px 14px;
+  border: 1px solid #fecaca;
+  background: #fff1f2;
+  color: #7f1d1d;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+/* Кнопки — используем вашу систему */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-weight: 800;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 0.08s ease, filter 0.2s ease, border-color 0.2s ease;
+}
+.btn--primary {
+  background: var(--brand);
+  color: #fff;
+  box-shadow: 0 12px 24px color-mix(in srgb, var(--brand) 28%, transparent);
+}
+.btn--primary:hover {
+  filter: brightness(1.05);
+}
+.btn--primary:active {
+  transform: translateY(1px);
+}
+.btn--soft {
+  background: #fff;
+  color: var(--text);
+  border-color: var(--stroke);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.btn--lg {
+  height: 48px;
+  padding: 0 18px;
+}
+
+.wizard__map-wrap {
+  position: relative;
+}
+.wizard__map {
+  height: 360px;
+  border-radius: var(--radius);
+  border: 1px solid var(--stroke);
+  overflow: hidden;
+}
+.wizard__map-skel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: repeating-linear-gradient(
+    90deg,
+    #f3f5f9,
+    #f3f5f9 10px,
+    #eef1f6 10px,
+    #eef1f6 20px
+  );
+  color: #64748b;
+  font-weight: 700;
+}
+.wizard__geo {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+}
+
+.ui-tip {
+  background: #f1f5ff;
+  border: 1px solid #dbe3ff;
+  color: #1e40af;
+  padding: 10px 12px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+.ui-tip--warn {
+  background: #fff7ed;
+  border-color: #fed7aa;
+  color: #9a3412;
+  margin-top: 8px;
+}
+/* Карта и панель — аккуратная раскладка */
+.wizard__map-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+.wizard__map-col {
+  min-width: 0;
+}
+.wizard__map {
+  height: 360px;
+  border-radius: var(--radius);
+  border: 1px solid var(--stroke);
+  overflow: hidden;
+  background: #eef1f6;
+}
+.wizard__map-skel {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  font-weight: 700;
+}
+.wizard__side {
+  background: var(--card);
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.wizard__search {
+  position: relative;
+}
+.wizard__results {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  background: #fff;
+  border: 1px solid var(--stroke);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+  z-index: 20;
+  max-height: 260px;
+  overflow: auto;
+}
+.wizard__result {
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  background: #fff;
+  border: 0;
+  cursor: pointer;
+}
+.wizard__result:hover {
+  background: #f6f8fb;
+}
+.wizard__result-name {
+  display: block;
+  font-weight: 800;
+  color: var(--text);
+}
+.wizard__result-sub {
+  display: block;
+  color: #64748b;
+  font-size: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.wizard__geo {
+  align-self: flex-start;
+}
+.wizard__coord {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 10px;
+  background: #fff;
+}
+.wizard__muted {
+  color: #64748b;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .wizard__map-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.wizard__search {
+  position: relative;
+}
+.wizard__search-btn {
+  position: absolute;
+  right: 6px;
+  top: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1;
+}

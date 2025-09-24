@@ -1,0 +1,69 @@
+{# templates/article/show.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}
+	{{ article.title }}
+	— Статья
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/articles.css') }}">
+{% endblock %}
+
+{% block body %}
+	<section class="article">
+		<div class="container">
+			<nav class="article__crumbs">
+				<a href="{{ path('article_list') }}">← Ко всем статьям</a>
+			</nav>
+
+			<header class="article__head">
+				<h1 class="article__title">{{ article.title }}</h1>
+				{% if article.createAt %}
+					<time class="article__date" datetime="{{ article.createAt|date('c') }}">{{ article.createAt|date('d.m.Y') }}</time>
+				{% endif %}
+			</header>
+
+			{% if article.description %}
+				<article class="article__content">
+					<p>{{ article.description|nl2br }}</p>
+				</article>
+			{% endif %}
+
+			{% set filesCount = article.documents|length %}
+			{% if filesCount > 0 %}
+				<section class="article__files">
+					<h2 class="article__files-title">📁 Документы ({{ filesCount }})</h2>
+					<ul class="article__file-list">
+						{% for document in article.documents %}
+							{% set href = document.id is defined
+              ? path('document_download', { id: document.id })
+              : asset('uploads/pdf/' ~ document.path) %}
+							<li class="article__file-item">
+								<a class="article__file-link" href="{{ href }}" target="_blank" rel="noopener">
+									{{ document.originalName ?? document.path }}
+								</a>
+								{% if document.size %}
+									<span class="article__file-size">·
+										{{ (document.size / 1024)|round(0, 'ceil') }}
+										КБ</span>
+								{% endif %}
+							</li>
+						{% endfor %}
+					</ul>
+				</section>
+			{% endif %}
+		</div>
+	</section>
+
+	{# JSON-LD #}
+	{% set ld = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  'headline': article.title,
+  'datePublished': article.createAt ? article.createAt|date('c') : null,
+  'mainEntityOfPage': app.request.uri
+} %}
+	<script type="application/ld+json">{{ ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
+{% endblock %}

@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Ads{% endblock %}
+{% block title %}Подать объявление
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Ads</h1>
+	<section class="ads ads-create">
+		<div class="ads__head">
+			<h1 class="ads__title">Подать объявление</h1>
+			<a href="{{ path('app_ads_index') }}" class="ads__cta ads__cta--ghost">← К списку</a>
+		</div>
 
-    {{ include('ads/_form.html.twig') }}
+		<div class="ads-form ads-form--panel">
 
-    <a href="{{ path('app_ads_index') }}">back to list</a>
+			{{ include('ads/_form.html.twig', { button_label: 'Опубликовать' }) }}
+		</div>
+	</section>
 {% endblock %}

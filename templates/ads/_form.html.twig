@@ -1,4 +1,86 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+{% form_theme form 'ads/ads_theme.html.twig' %}
+
+<div class="ad-form ad-form--panel">
+	{{ form_start(form, { attr: { class: 'ad-form__grid', novalidate: 'novalidate' } }) }}
+
+	{# ——— Секция: Основное ——— #}
+	<section class="ad-section">
+		<div class="ad-section__head">
+			<h2 class="ad-section__title">Основное</h2>
+			<p class="ad-section__hint">Это поможет быстрее найти объявление.</p>
+		</div>
+		<div class="ad-section__body">
+			{{ form_row(form.title) }}
+			{{ form_row(form.category) }}
+			{{ form_row(form.description) }}
+		</div>
+	</section>
+
+	{# ——— Секция: Локация ——— #}
+	<section class="ad-section">
+		<div class="ad-section__head">
+			<h2 class="ad-section__title">Локация</h2>
+			<p class="ad-section__hint">Укажите регион, город и индекс.</p>
+		</div>
+		<div class="ad-section__body ad-section__body--cols">
+			{{ form_row(form.region) }}
+			{{ form_row(form.city) }}
+			{{ form_row(form.poste_code) }}
+		</div>
+	</section>
+
+	{# ——— Секция: Цена ——— #}
+	<section class="ad-section">
+		<div class="ad-section__head">
+			<h2 class="ad-section__title">Цена</h2>
+			<p class="ad-section__hint">Укажите стоимость в евро.</p>
+		</div>
+		<div class="ad-section__body ad-section__body--narrow">
+			{{ form_row(form.price) }}
+		</div>
+	</section>
+
+	{# ——— Секция: Медиа ——— #}
+	<section class="ad-section">
+		<div class="ad-section__head">
+			<h2 class="ad-section__title">Фотографии</h2>
+			<p class="ad-section__hint">До 5 изображений, форматы: JPG, PNG, WEBP (до 6 МБ).</p>
+		</div>
+
+		{# Показ уже загруженных фото (только на edit) #}
+		{% if ad is defined and ad.photos is defined and ad.photos|length %}
+			<div class="ad-section__help ad-section__help--top">
+				Чтобы удалить фото — отметьте галочкой и нажмите «Сохранить изменения».
+			</div>
+
+			<div class="ad-gallery">
+				{% for fileName in ad.photos %}
+					<div class="ad-photo">
+						<img src="{{ asset('uploads/ads/' ~ fileName) }}" alt="Фото {{ loop.index }}" class="ad-photo__img" loading="lazy">
+						<input type="checkbox" name="remove_photos[]" value="{{ fileName }}" id="photo_remove_{{ loop.index }}" class="ad-photo__check">
+						<label for="photo_remove_{{ loop.index }}" class="ad-photo__checkbox"></label>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}
+
+		<div
+			class="ad-section__body ad-section__body--full">
+			{# поле добавления новых фото из самой формы #}
+			{{ form_label(form.images, 'Добавить фото', { label_attr: { class: 'ads-field__label' } }) }}
+			{{ form_widget(form.images, { attr: { class: 'ads-input ads-input--file', multiple: 'multiple', accept: 'image/jpeg,image/png,image/webp' } }) }}
+			{{ form_errors(form.images) }}
+			<div class="ad-section__help">Можно добавить до 5 фото суммарно. При отметке «Удалить» старые фото будут удалены после сохранения.</div>
+		</div>
+	</section>
+
+	{# ——— Действия ——— #}
+	<div class="ad-actions">
+		<button type="submit" class="ads__cta">
+			{{ button_label|default('Опубликовать') }}
+		</button>
+		<a href="{{ path('app_ads_index') }}" class="ads__cta ads__cta--ghost">Отмена</a>
+	</div>
+
+	{{ form_end(form) }}
+</div>

@@ -1,52 +1,132 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Ads index{% endblock %}
+{% block title %}Доска объявлений
+{% endblock %}
 
 {% block body %}
+	{% include 'search/search.html.twig' %}
 
-{% include 'search/search.html.twig' %}
-    <h1>Ads index</h1>
+	<section class="ads">
+		<div class="ads__head">
+			<h1 class="ads__title">Доска объявлений</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Название</th>
-                <th>Описание</th>
-                <th>Цена</th>
-                <th>Город</th>
-                <th>Индекс города</th>
-                <th>Регион</th>
-                <th>Категория</th>
-                <th>Cоздано</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for ad in ads %}
-            <tr>
-                <td>{{ ad.id }}</td>
-                <td>{{ ad.title }}</td>
-                <td>{{ ad.description }}</td>
-                <td>{{ ad.price }}</td>
-                <td>{{ ad.city }}</td>
-                <td>{{ ad.posteCode }}</td>
-                <td>{{ ad.region }}</td>
-                <td>{{ ad.category }}</td>
-                <td>{{ ad.createdAt ? ad.createdAt|date('Y-m-d H:i:s') : '' }}</td>
-                
-                <td>
-                    <a href="{{ path('app_ads_show', {'id': ad.id}) }}">show</a>
-                   
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="11">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+			<a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="ads__cta">
+				Подать объявление
+			</a>
+		</div>
 
-     <a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="header__logIn-link">Подать обьявление</a>
+		{% if ads is empty %}
+			<div class="ads__empty">
+				<p>Объявлений пока нет. Будьте первым!</p>
+				<a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="ads__cta ads__cta--ghost">
+					Разместить объявление
+				</a>
+			</div>
+		{% else %}
+			<div class="ads__grid">
+				{% for ad in ads %}
+					{# Обложка: берём 1-е фото из массива photos (если он есть и не пустой) #}
+					{% set cover = null %}
+					{% if ad.photos is defined %}
+						{% if ad.photos is iterable and ad.photos|length > 0 %}
+							{% set cover = ad.photos|first %}
+						{% elseif ad.photos is not iterable and ad.photos %}
+							{% set cover = ad.photos %}
+						{% endif %}
+					{% endif %}
+
+					<article class="ad-card">
+						<a href="{{ path('app_ads_show', {'id': ad.id}) }}" class="ad-card__media">
+							{% if cover %}
+								<img src="{{ asset('uploads/ads/' ~ cover) }}" alt="{{ ad.title }}" class="ad-card__img" loading="lazy">
+							{% else %}
+								<div class="ad-card__placeholder" aria-hidden="true">
+									<svg viewbox="0 0 24 24" class="ad-card__ph-icon">
+										<path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14m18 0H3m18 0v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1m14-8-3 3-2-2-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+									</svg>
+								</div>
+							{% endif %}
+							<span class="ad-card__badge">{{ ad.category }}</span>
+						</a>
+
+						<div class="ad-card__body">
+							<h3 class="ad-card__title">
+								<a href="{{ path('app_ads_show', {'id': ad.id}) }}">{{ ad.title }}</a>
+							</h3>
+
+							<div class="ad-card__meta">
+								<span class="ad-card__price">
+									{% if ad.price is not null %}
+										{{ ad.price }}
+										€
+									{% else %}
+										—
+									{% endif %}
+								</span>
+								<span class="ad-card__dot">•</span>
+								<span class="ad-card__loc">
+									{{ ad.city }}
+									{% if ad.region %},
+										{{ ad.region }}
+									{% endif %}
+									{% if ad.poste_code is defined and ad.poste_code %}
+										({{ ad.poste_code }})
+									{% endif %}
+								</span>
+							</div>
+
+							<p class="ad-card__desc">
+								{% if ad.description %}
+									{{ ad.description|slice(0, 120) ~ (ad.description|length > 120 ? '…' : '') }}
+								{% endif %}
+							</p>
+
+							<div class="ad-card__footer">
+								<time class="ad-card__date" datetime="{{ ad.created_at is defined and ad.created_at ? ad.created_at|date('c') : '' }}">
+									{{ ad.created_at is defined and ad.created_at ? ad.created_at|date('d.m.Y, H:i') : '' }}
+								</time>
+								<a href="{{ path('app_ads_show', {'id': ad.id}) }}" class="ad-card__more">
+									Открыть
+								</a>
+							</div>
+						</div>
+					</article>
+				{% endfor %}
+			</div>
+
+			{# Пагинация: «Назад / Далее». Линки сохраняют текущие фильтры/поиск #}
+			{% if pages is defined and pages > 1 %}
+				<nav class="pager" aria-label="Пагинация">
+					<div class="pager__row">
+						{% set merged = app.request.query.all %}
+
+						<div class="pager__side">
+							{% if page > 1 %}
+								<a class="pager__btn" href="{{ path(app.request.attributes.get('_route'), merged | merge({'page': page - 1})) }}" rel="prev">‹ Назад</a>
+							{% endif %}
+						</div>
+
+						<div class="pager__center">
+							<span class="pager__info">
+								Страница
+								{{ page }}
+								из
+								{{ pages }}
+								{% if total is defined %}
+									• Всего:
+									{{ total }}
+								{% endif %}
+							</span>
+						</div>
+
+						<div class="pager__side">
+							{% if hasNext %}
+								<a class="pager__btn" href="{{ path(app.request.attributes.get('_route'), merged | merge({'page': page + 1})) }}" rel="next">Далее ›</a>
+							{% endif %}
+						</div>
+					</div>
+				</nav>
+			{% endif %}
+		{% endif %}
+	</section>
 {% endblock %}

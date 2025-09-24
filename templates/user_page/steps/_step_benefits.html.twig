@@ -1,0 +1,7 @@
+<div class="wizard-pane {{ active ? 'is-active' }}" data-step="2" role="tabpanel">
+	<div class="ui-card">
+		{{ form_row(form.advantageOne,   { row_attr: { class: 'ui-field' }, attr: { class: 'ui-input', maxlength: 255, placeholder: 'Например: Быстрый выезд' } }) }}
+		{{ form_row(form.advantageTwoo,  { row_attr: { class: 'ui-field' }, attr: { class: 'ui-input', maxlength: 255, placeholder: 'Например: Гарантия 12 месяцев' } }) }}
+		{{ form_row(form.advantageThree, { row_attr: { class: 'ui-field' }, attr: { class: 'ui-input', maxlength: 255, placeholder: 'Например: Доступные цены' } }) }}
+	</div>
+</div>

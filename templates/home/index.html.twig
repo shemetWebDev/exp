@@ -1,195 +1,226 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomeController!{% endblock %}
+{% block title %}ExpFR — объявления во Франции
+{% endblock %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	<link rel="stylesheet" href="{{ asset('css/home.css') }}">
+{% endblock %}
 
 {% block body %}
-<section class="banner">
-    <img class="banner__triangle" src="../public/images/triangle.svg" alt="">
-    <img class="banner__irregular_shape" src="../public/images/irregular_shape.svg" alt="">
 
-    <div class="banner__content">
-        <div class="banner__titleWrapper">
-            <img src="{{ asset('images/horizontal-logo.png') }}" alt="exapts_france, мигранты Франция изображение">
-            <h1 class="banner__title">Площадка обьявлений во Франции для наших!</h1>
-        </div>
-        <h3 class="banner__description">С помощью нашего сайта ExpFR Вы легко</h3>
+	{# ---------- HERO ---------- #}
+	<section class="hero">
+		<div class="container hero__wrap">
+			<div class="hero__content">
+				<div class="hero__brand">
+					<img src="{{ asset('images/horizontal-logo.png') }}" alt="ExpFR" class="hero__logo">
+					<span class="hero__tag">для наших во Франции</span>
+				</div>
 
-        <div class="banner__list">
-            <ul>
-                <li>Найди работу, жилье, автомеханика и многое другое.</li>
-                <li>Подайте обьявление о Вашей деятельности - врач, юрист, няня, повар.</li>
-                <li>Рестораны, магазины, кафе по городам</li>
-                <li>Возможность создания не только обьявления а и в несколько кликов страницу-сайт для Вашего бизнеса</li>
-            </ul>
-        </div>
+				<h1 class="hero__title">Площадка объявлений во Франции</h1>
+				<p class="hero__lead">Работа, жильё, услуги и бизнес-страницы — без лишних сложностей.</p>
 
-        <div class="banner__btnWrapper">
-            <a  href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="header__logIn-link">Подать обьявление</a>
-            <a href="{{path('app_ads_index')}}" class="banner__btn">Доска обьявлений</a>
-        </div>
-    </div>
-</section>
-<section class="site-creation">
-    <div class="site-creation__container">
-        <div class="site-creation__header">
-            <h2 class="site-creation__title">Создайте свой сайт за несколько кликов</h2>
-            <p class="site-creation__subtitle">
-                Вам не нужна дорогая разработка. Запустите сайт быстро, без затрат на сервер и поддержку.
-            </p>
-        </div>
+				<ul class="hero__list">
+					<li class="hero__item">Найдите работу, жильё, мастера или сервис поблизости</li>
+					<li class="hero__item">Разместите объявление о своей деятельности</li>
+					<li class="hero__item">Мини-сайт для бизнеса в пару кликов</li>
+				</ul>
 
-        <div class="site-creation__features">
-            <div class="site-creation__feature">
-                <img src="{{asset('images/castcom_responsive_web_design1.jpg')}}" alt="Адаптивный дизайн">
-                <h3>Адаптивный дизайн</h3>
-                <p>Ваш сайт будет идеально работать на любых устройствах.</p>
-            </div>
+				<div class="hero__actions">
+					<a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="btn btn--primary">Подать объявление</a>
+					<a href="{{ path('app_ads_index') }}" class="btn btn--soft">Открыть доску</a>
+				</div>
+			</div>
 
-            <div class="site-creation__feature">
-                <img src="{{asset('images/3.jpg')}}" alt="SEO-оптимизация">
-                <h3>SEO-оптимизация</h3>
-                <p>Продвижение в поисковых системах встроено в платформу.</p>
-            </div>
+			<div class="hero__art" aria-hidden="true">
+				<img src="{{ asset('images/irregular_shape.svg') }}" alt="" class="hero__shape">
+				<img src="{{ asset('images/triangle.svg') }}" alt="" class="hero__shape hero__shape--tl">
+			</div>
+		</div>
+	</section>
 
-            <div class="site-creation__feature">
-                <img src="{{asset('images/expFrSeo.jpg')}}" alt="Готовые шаблоны">
-                <h3>Готовые шаблоны</h3>
-                <p>Выберите профессиональный дизайн и настройте его за минуту.</p>
-            </div>
-        </div>
+	{# ---------- FEATURES (в рамке) ---------- #}
+	<section class="features">
+		<div class="container">
+			<div class="features__card">
+				<header class="features__head">
+					<h2 class="features__title">Создайте сайт за несколько кликов</h2>
+					<p class="features__sub">
+						Без дорогой разработки и поддержки: заполняете описание, контакты и
+						<strong>адрес с меткой на карте</strong>
+						— клиенты смогут сразу открыть в картах и
+						<strong>проложить маршрут</strong>, а также быстро
+						<em>позвонить</em>
+						или
+						<em>написать</em>.
+					</p>
+				</header>
 
-        <div class="site-creation__cta">
-            <a href="{{ path('user_page_create') }}">
-    <button class="site-creation__button">Создать сайт</button>
-</a>
-        </div>
-    </div>
-</section>
+				<div class="features__grid">
+					<article class="feature">
+						<img src="{{ asset('images/castcom_responsive_web_design1.jpg') }}" alt="Адаптивный дизайн" class="feature__img">
+						<h3 class="feature__title">Адаптивный дизайн</h3>
+						<p class="feature__text">Отлично работает на телефонах, планшетах и десктопах.</p>
+					</article>
 
+					<article class="feature">
+						<img src="{{ asset('images/3.jpg') }}" alt="SEO-оптимизация" class="feature__img">
+						<h3 class="feature__title">SEO-оптимизация</h3>
+						<p class="feature__text">Мета-теги, превью для соцсетей и чистая разметка.</p>
+					</article>
 
+					<article class="feature">
+						<img src="{{ asset('images/expFrSeo.jpg') }}" alt="Готовые шаблоны" class="feature__img">
+						<h3 class="feature__title">Готовые шаблоны</h3>
+						<p class="feature__text">Выберите дизайн и запустите страницу за минуты.</p>
+					</article>
 
-<section class="services">
-    <h2 class="services__title">Примеры обьявлений</h2>
-    <div id="announcement-carousel" class="splide">
-        <div class="splide__track">
-            <ul class="splide__list">
-               {% for ad in ads %}
-                    <li class="splide__slide">
-                        <div class="services__card">
-                            <h4 class="services__card-title">{{ ad.title }}</h4>
-                            <p class="services__card-description">{{ ad.description }}</p>
-                            <a href="{{ path('app_ads_show', {'id': ad.id}) }}" class="services__btn">Перейти к объявлению</a>
-                        </div>
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    </div>
-</section>
+					{# четвёртая карточка — плейсхолдер под твоё изображение #}
+					<article class="feature">
+						<img src="{{ asset('images/map.png') }}" alt="Готовые шаблоны" class="feature__img">
+						<h3 class="feature__title">Точка на Карте</h3>
+						<p class="feature__text">Добавьте свою  локацию, что позволит Вашим клиентам находить Вас  всего за 1 клик.</p>
+					</article>
+				</div>
 
-<section class="info">
-    <h3 class="info_title">Почему мы ?</h3>
-    <p class="info__text">Мы собрали здесь всё для удобства пользователей и предпринимателей. Развиваем площадку, чтобы сделать её лучше для вас.</p>
-    <div class="info__stats">
-        <div class="chart-container">
-            <canvas id="visitsChart" style="max-height: 520px; width: 100%;"></canvas>
-        </div>
-    </div>
-    <p class="info__subText">generated with <span class="info__note">Google Analytics</span></p>
-</section>
+				<p class="features__note">
+					На странице доступны быстрые действия:
+					<strong>Позвонить</strong>,
+					<strong>Связаться</strong>
+					и
+					<strong>Маршрут</strong>.
+																																																					Это упрощает путь клиента — меньше вопросов, больше обращений.
+				</p>
 
-<section class="update">
-    <h3 class="update_title">Площадка ExpFr находится в процессе ежедневного обновления</h3>
-    <p class="update__text">Свяжитесь с нами и подайте объявление уже сегодня!</p>
+				<div class="features__cta">
+					<a class="btn btn--primary" href="{{ path('user_page_create') }}">Создать сайт</a>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <div class="update_contactsWrapperS">
-        <!-- Telegram блок -->
-        <div class="update_telegram">
-            <a href="https://t.me/ExpFRr" target="_blank">
-                <img src="{{ asset('https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg') }}" alt="Telegram">
-            </a>
-            <div class="update_links">
-                <a class="update_telegramLink" href="https://t.me/ExpFRr" target="_blank">Написать в Telegram</a>
-                <a class="update_telegramLink" href="https://t.me/ExpFranc" target="_blank">Присоединиться к каналу</a>
-            </div>
-        </div>
+	{# ---------- POPULAR ADS CAROUSEL ---------- #}
+	<section class="ads-section">
+		<div class="container">
+			<h2 class="ads-section__title">Популярные объявления</h2>
 
-        <!-- Email контакт -->
-        <div class="update_email">
-            <a href="mailto:contact@expfr.com" class="update_emailLink">pastmood@gmail.com</a>
-        </div>
-    </div>
-</section>
+			{% if popular is empty %}
+				<p class="ads-section__empty">Пока нет популярных объявлений. Будьте первыми —
+					<a href="{{ app.user ? path('app_ads_new') : path('app_login') }}">подайте объявление</a>!</p>
+			{% else %}
+				<div id="popular-slider" class="splide splide--ads">
+					<div class="splide__track">
+						<ul class="splide__list">
+							{% for ad in popular %}
+								{% set cover = null %}
+								{% if ad.photos is defined %}
+									{% if ad.photos is iterable and ad.photos|length > 0 %}
+										{% set cover = ad.photos|first %}
+									{% elseif ad.photos is not iterable and ad.photos %}
+										{% set cover = ad.photos %}
+									{% endif %}
+								{% endif %}
+								{% if cover is null and ad.photo is defined and ad.photo %}
+									{% set cover = ad.photo %}
+								{% endif %}
+
+								<li class="splide__slide">
+									<article class="ad-card">
+										<a href="{{ path('app_ads_show', {'id': ad.id}) }}" class="ad-card__media">
+											{% if cover %}
+												<img src="{{ asset('uploads/ads/' ~ cover) }}" alt="{{ ad.title }}" class="ad-card__img" loading="lazy">
+											{% else %}
+												<div class="ad-card__ph" aria-hidden="true">
+													<svg viewbox="0 0 24 24" class="ad-card__ph-icon">
+														<path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14m18 0H3m18 0v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1m14-8-3 3-2-2-4 4" fill="none" stroke="currentColor" stroke-width="1.5"/>
+													</svg>
+												</div>
+											{% endif %}
+											{% if ad.category %}
+												<span class="ad-card__badge-slider">{{ ad.category }}</span>
+											{% endif %}
+										</a>
+
+										<div class="ad-card__body">
+											<h3 class="ad-card__title">
+												<a href="{{ path('app_ads_show', {'id': ad.id}) }}">{{ ad.title }}</a>
+											</h3>
+
+											<div class="ad-card__meta">
+												<span class="ad-card__price">
+													{% if ad.price is not null %}
+														{{ ad.price }}
+														€{% else %}—
+													{% endif %}
+												</span>
+												<span class="ad-card__dot">•</span>
+												<span class="ad-card__loc">
+													{{ ad.city }}
+													{% if ad.posteCode %}
+														({{ ad.posteCode }})
+													{% endif %}
+												</span>
+											</div>
+
+											<p class="ad-card__desc">
+												{{ ad.description|striptags|trim|slice(0, 120) ~ (ad.description|length > 120 ? '…' : '') }}
+											</p>
+										</div>
+
+										<div class="ad-card__foot">
+											<span class="ad-card__likes" title="Лайков">♥
+												{{ ad.likes|length }}</span>
+											<time class="ad-card__date" datetime="{{ ad.createdAt ? ad.createdAt|date('c') : '' }}">
+												{{ ad.createdAt ? ad.createdAt|date('d.m.Y') : '' }}
+											</time>
+										</div>
+									</article>
+								</li>
+							{% endfor %}
+						</ul>
+					</div>
+				</div>
+			{% endif %}
+		</div>
+	</section>
+
+	{# ---------- WHY (CHART PLACEHOLDER) ---------- #}
+	<section class="why">
+		<div class="container">
+			<h3 class="why__title">Почему ExpFR?</h3>
+			<p class="why__text">Мы собираем всё для удобства пользователей и предпринимателей: объявления, контакты, мини-сайты, рейтинги и избранное.</p>
+
+			<div class="why__chart">
+				<canvas id="visitsChart" aria-label="График посещаемости" role="img"></canvas>
+			</div>
+			<p class="why__note">Данные примерные, формируются на основе внутренней аналитики.</p>
+		</div>
+	</section>
+
+	{# ---------- CONTACTS ---------- #}
+	<section class="contact">
+		<div class="container contact__wrap">
+			<div class="contact__col">
+				<h3 class="contact__title">Связаться с нами</h3>
+				<p class="contact__text">Площадка в постоянном развитии. Пишите — поможем разместить объявление и настроить бизнес-страницу.</p>
+				<div class="contact__row">
+					<a class="contact__link" href="mailto:pastmood@gmail.com">pastmood@gmail.com</a>
+					<a class="contact__link" href="https://t.me/ExpFRr" target="_blank" rel="noopener">Telegram</a>
+				</div>
+			</div>
+			<div class="contact__col contact__col--right">
+				<a href="{{ app.user ? path('app_ads_new') : path('app_login') }}" class="btn btn--primary btn--lg">Подать объявление</a>
+			</div>
+		</div>
+	</section>
 
 {% endblock %}
 
 {% block javascripts %}
-    <!-- Подключаем Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-    <!-- Подключаем Splide.js -->
-    <script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.8/dist/js/splide.min.js"></script>
-
-    <script>
-        // Получаем элемент canvas
-        var ctx = document.getElementById('visitsChart').getContext('2d');
-
-        // Создаем график
-        var visitsChart = new Chart(ctx, {
-            type: 'line', // Тип графика
-            data: {
-                labels: ['Январь', 'Февраль', 'Март', 'Апрель', 'Май'], // Месяцы на русском
-                datasets: [{
-                    label: 'Общие посещения',
-                    data: [1800, 2100, 3000, 4700, 6500], // Данные о посещениях
-                    borderColor: 'rgba(75, 192, 192, 1)', // Цвет линии для общих посещений
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)', // Цвет фона для общих посещений
-                    fill: true, // Заполнение области под графиком
-                    tension: 0.1 // Плавность кривой
-                },
-                {
-                    label: 'Уникальные пользователи',
-                    data: [1200, 1400, 2100, 3500, 4800], // Данные о уникальных пользователях
-                    borderColor: 'rgba(153, 102, 255, 1)', // Цвет линии для уникальных пользователей
-                    backgroundColor: 'rgba(153, 102, 255, 0.2)', // Цвет фона для уникальных пользователей
-                    fill: true, // Заполнение области под графиком
-                    tension: 0.1 // Плавность кривой
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    x: {
-                        beginAtZero: true // Начало оси X с 0
-                    },
-                    y: {
-                        beginAtZero: true // Начало оси Y с 0
-                    }
-                }
-            }
-        });
-
-        // Инициализация слайдера с объявлениями
-        document.addEventListener('DOMContentLoaded', function () {
-            var splide = new Splide('#announcement-carousel', {
-                type       : 'loop',         // Бесконечная прокрутка
-                perPage    : 3,              // 3 слайда на странице
-                focus      : 'center',
-                perMove    : 1,              // Сколько слайдов двигать за раз
-                gap        : '2rem',         // Расстояние между слайдами
-                autoplay  : true,            // Автопрокрутка
-                pauseOnHover: true,          // Остановка прокрутки при наведении
-                breakpoints: {
-                    1200: {
-                        perPage: 2,         // На экранах с шириной до 1200px будет показываться 2 слайда
-                    },
-                    800: {
-                        perPage: 1,         // На экранах с шириной до 800px будет показываться 1 слайд
-                    },
-                },
-            });
-
-            splide.mount();
-        });
-    </script>
+	{{ parent() }}
+	<script src="https://cdn.jsdelivr.net/npm/@splidejs/splide@3.6.12/dist/js/splide.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+	<script src="{{ asset('js/home.js') }}"></script>
 {% endblock %}

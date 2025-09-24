@@ -1,62 +1,57 @@
 {% extends 'base.html.twig' %}
+{% block title %}Создать страницу
+{% endblock %}
 
 {% block body %}
-    <h1>Создать страницу</h1>
+	<section class="wizard">
+		<div class="container">
+			<h1 class="wizard__title">Создание страницы</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.title) }}
-        {{ form_row(form.slug) }}
-        {{ form_row(form.keywords) }}
-        {{ form_row(form.subtitle) }}
-        {{ form_row(form.bannerImg) }}
-        {{ form_row(form.image) }}
-        {{ form_row(form.advantageOne) }}
-        {{ form_row(form.advantageTwoo) }}
-        {{ form_row(form.advantageThree) }}
-        {{ form_row(form.phone) }}
-        {{ form_row(form.adress) }}
-        {{ form_row(form.email) }}
-        {{ form_row(form.companyName) }}
+			<div class="wizard__notice" role="status" aria-live="polite">
+				<strong>Условия видимости:</strong>
+				Новая страница будет видима
+				<b>{{ trial_hours }}
+					часов</b>
+				(до
+				<b>{{ trialEndsAt|date('d.m.Y H:i') }}</b>). После — страница скроется до подтверждения оплаты.
+			</div>
 
-        <div id="map" class="map-container" style="height: 400px; width: 100%;"></div>
+			{{ form_start(form, { attr: { id: 'userPageForm', class: 'wizard__form', novalidate: 'novalidate' } }) }}
+			{# сервер управляет шагом #}
+			<input type="hidden" name="step" value="{{ step|default(0) }}"/>
 
-        <input type="text" id="coordinates" class="form-control" placeholder="Координаты на карте" readonly />
+			{% include 'user_page/steps/_head.html.twig' with { step: step|default(0) } %}
 
-        {{ form_row(form.mapPosition) }}
+			<div id="wizardAlert" class="wizard-alert" {{ form.vars.errors|length ? '' : 'hidden' }}>
+				Проверьте выделенные поля на этом шаге.
+			</div>
 
-        <button class="btn btn-primary">Создать страницу</button>
-    {{ form_end(form) }}
+			<div class="wizard-content">
+				{% include 'user_page/steps/_step_basic.html.twig'   with { form: form, active: step == 0 } %}
+				{% include 'user_page/steps/_step_images.html.twig'  with { form: form, active: step == 1, stored: stored|default({}) } %}
+				{% include 'user_page/steps/_step_benefits.html.twig' with { form: form, active: step == 2 } %}
+				{% include 'user_page/steps/_step_contacts.html.twig' with { form: form, active: step == 3 } %}
+				{% include 'user_page/steps/_step_map.html.twig'     with { form: form, active: step == 4 } %}
+			</div>
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+			<div class="wizard-actions" aria-label="Навигация по шагам">
+				<button type="submit" name="nav" value="prev" class="btn btn--soft btn--lg" {{ step == 0 ? 'disabled' }}>
+					Назад
+				</button>
+				{% if step < 4 %}
+					<button type="submit" name="nav" value="next" class="btn btn--primary btn--lg">Далее</button>
+				{% else %}
+					<button type="submit" name="nav" value="submit" class="btn btn--primary btn--lg">Создать страницу</button>
+				{% endif %}
+			</div>
+			{{ form_end(form) }}
+		</div>
 
-    <script>
-        let map;
-        let marker;
-        function initMap() {
-            const defaultPosition = [48.8566, 2.3522]; 
-            map = L.map('map').setView(defaultPosition, 12);
+		{# Leaflet с CDN #}
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+		<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            }).addTo(map);
-
-            marker = L.marker(defaultPosition, { draggable: true }).addTo(map);
-
-            marker.on('dragend', function(event) {
-                const position = event.target.getLatLng();
-                const coordinates = position.lat + ',' + position.lng;
-                document.getElementById('coordinates').value = coordinates;
-                document.querySelector('input[name="user_page[mapPosition]"]').value = coordinates;
-            });
-            map.on('click', function(event) {
-                const position = event.latlng;
-                marker.setLatLng(position);
-                const coordinates = position.lat + ',' + position.lng;
-                document.getElementById('coordinates').value = coordinates;
-                document.querySelector('input[name="user_page[mapPosition]"]').value = coordinates;
-            });
-        }
-        document.addEventListener('DOMContentLoaded', initMap);
-    </script>
+		{# ваш собранный фронт (Encore/Vite). Если без сборки — положите файл в public/build и подключите как asset() #}
+		<script defer src="{{ asset('js/user_page_wizard.js') }}"></script>
+	</section>
 {% endblock %}

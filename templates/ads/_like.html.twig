@@ -1,0 +1,29 @@
+{# Виджет лайка. Ожидает переменную ad #}
+
+{# Можно ли лайкать (гость/владелец — нельзя) #}
+{% set can_like = app.user and (ad.user != app.user) %}
+
+{# Endpoint и CSRF #}
+{% set url   = path('app_ads_like_toggle', {'id': ad.id}) %}
+{% set token = csrf_token('like' ~ ad.id) %}
+
+{# Определяем: лайкнул ли текущий пользователь (без break) #}
+{% set mine = false %}
+	{% if app.user %}
+		{% for l in ad.likes %}
+			{% if l.user is same as(app.user) %}
+		{% set mine = true %}
+	{% endif %}
+{% endfor %}
+{% endif %}
+
+{# Счётчик лайков #}
+{% set count = ad.likes|length %}
+
+	<span class="like" data-like data-ad-id="{{ ad.id }}" data-url="{{ url }}" data-token="{{ token }}" data-liked="{{ mine ? '1' : '0' }}"> <button type="button" class="like__btn{{ mine ? ' is-liked' : '' }}" {% if not can_like %} disabled {% endif %} aria-pressed="{{ mine ? 'true' : 'false' }}" title="{{ not app.user ? 'Войдите, чтобы поставить лайк' : (ad.user == app.user ? 'Нельзя лайкать своё' : 'Нравится') }}">
+		<svg class="like__icon" viewbox="0 0 24 24" aria-hidden="true">
+			<path d="M12.001 20.727s-7.2-4.3-9.6-7.65c-2.4-3.35.6-7.35 4.2-7.35 2.1 0 3.3 1.1 4.2 2.35.9-1.25 2.1-2.35 4.2-2.35 3.6 0 6.6 4 4.2 7.35-2.4 3.35-9.4 7.65-9.4 7.65z"/>
+		</svg>
+	</button>
+	<span class="like__count" data-like-count>{{ count }}</span>
+</span>

@@ -1,13 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Ads{% endblock %}
+{% block title %}Edit Ads
+{% endblock %}
 
 {% block body %}
-    <h1>Edit Ads</h1>
+	<h1>Edit Ads</h1>
 
-    {{ include('ads/_form.html.twig', {'button_label': 'Update'}) }}
+	{{ include('ads/_form.html.twig', {'button_label': 'Сохранить изменения'}) }}
 
-    <a href="{{ path('app_profile') }}">Вернуться в профиль</a>
+	<a href="{{ path('app_profile') }}">Вернуться в профиль</a>
 
-    {{ include('ads/_delete_form.html.twig') }}
+	{{ include('ads/_delete_form.html.twig') }}
 {% endblock %}

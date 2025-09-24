@@ -1,19 +1,29 @@
-<form  method="GET" class="search-form">
-    <div class="form-group">
-        <label for="category">Категория</label>
-        {% include 'search/categories.html.twig' %}
-    </div>
-    
-    <div class="form-group">
-        <label for="region">Регион</label>
-        {% include 'search/regions.html.twig' %}
-    </div>
-    
-    <div class="form-group">
-        <label for="search">Поиск</label>
-        <input type="text" name="search" id="search" class="form-control" placeholder="Поиск..." value="{{ app.request.query.get('search') }}">
-    </div>
-    
-    <button type="submit" class="btn btn-primary">Найти</button>
-    <a href="{{ path(app.request.attributes.get('_route')) }}" class="btn btn-secondary">Сбросить</a>
+<form method="GET" class="search-form ads__filters search-form--panel" role="search" aria-label="Фильтр объявлений">
+	<div class="form-group ads-filter">
+		<label for="category" class="ads-filter__label">Категория</label>
+		{% include 'search/categories.html.twig' %}
+		{# внутри select: class="form-control ads-filter__control" #}
+	</div>
+
+	<div class="form-group ads-filter">
+		<label for="region" class="ads-filter__label">Регион</label>
+		{% include 'search/regions.html.twig' %}
+		{# внутри select: class="form-control ads-filter__control" #}
+	</div>
+
+	<div class="form-group ads-filter">
+		<label for="search" class="ads-filter__label">Поиск</label>
+		<input type="text" name="search" id="search" class="form-control ads-filter__control" placeholder="Поиск по заголовку и описанию…" value="{{ app.request.query.get('search') }}" inputmode="search" aria-label="Поиск по объявлениям">
+	</div>
+
+	<div class="search-form__actions">
+		<button type="submit" class="ads__cta" title="Применить выбранные фильтры">
+			Показать объявления
+		</button>
+		<a href="{{ path(app.request.attributes.get('_route')) }}" class="ads__cta ads__cta--ghost" title="Сбросить выбранные фильтры">
+			Сбросить фильтры
+		</a>
+	</div>
+
+	<p class="search-form__hint">Фильтры применяются после нажатия «Показать объявления».</p>
 </form>

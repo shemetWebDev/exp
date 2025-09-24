@@ -22,14 +22,14 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('username', TextType::class, [
-                'label' => 'Username',
+                'label' => 'Имя',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a username',
+                        'message' => 'Введите имя',
                     ]),
                     new Length([
                         'max' => 150,
-                        'maxMessage' => 'Username cannot be longer than {{ limit }} characters',
+                        'maxMessage' => 'Имя не может быть длиннее {{ limit }} символов',
                     ]),
                 ],
             ])
@@ -37,76 +37,77 @@ class RegistrationFormType extends AbstractType
                 'label' => 'Email',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'Введите email',
                     ]),
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                'label' => 'Password',
+                'label' => 'Пароль',
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Введите пароль',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Пароль должен содержать минимум {{ limit }} символов',
                         'max' => 4096,
                     ]),
                 ],
             ])
             ->add('city', TextType::class, [
-                'label' => 'City (France only)',
+                'label' => 'Город (только Франция)',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your city',
+                        'message' => 'Введите название города',
                     ]),
                     new Length([
                         'max' => 100,
-                        'maxMessage' => 'City name cannot be longer than {{ limit }} characters',
+                        'maxMessage' => 'Название города не может быть длиннее {{ limit }} символов',
                     ]),
                 ],
             ])
             ->add('code_post', TextType::class, [
-                'label' => 'Postal Code (France only)',
+                'label' => 'Почтовый код (только Франция)',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your postal code',
+                        'message' => 'Введите почтовый код',
                     ]),
                     new Regex([
                         'pattern' => '/^\d{5}$/',
-                        'message' => 'Postal code must be a 5-digit number',
+                        'message' => 'Почтовый код должен состоять из 5 цифр',
                     ]),
                 ],
             ])
             ->add('number_phone', TelType::class, [
-                'label' => 'Phone Number',
+                'label' => 'Телефон',
                 'required' => false,
                 'constraints' => [
                     new Length([
                         'max' => 20,
-                        'maxMessage' => 'Phone number cannot be longer than {{ limit }} characters',
+                        'maxMessage' => 'Номер телефона не может быть длиннее {{ limit }} символов',
                     ]),
                 ],
             ])
             ->add('region', TextType::class, [
-                'label' => 'Region',
+                'label' => 'Регион',
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your region',
+                        'message' => 'Введите регион',
                     ]),
                     new Length([
                         'max' => 255,
-                        'maxMessage' => 'Region cannot be longer than {{ limit }} characters',
+                        'maxMessage' => 'Название региона не может быть длиннее {{ limit }} символов',
                     ]),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
+                'label' => 'Я соглашаюсь с правилами сервиса',
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Вы должны согласиться с правилами сервиса',
                     ]),
                 ],
             ]);

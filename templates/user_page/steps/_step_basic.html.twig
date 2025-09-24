@@ -1,0 +1,25 @@
+<div class="wizard-pane {{ active ? 'is-active' }}" data-step="0" role="tabpanel">
+	<div class="ui-card">
+		<div class="ui-field {{ form_errors(form.title) ? 'ui-field--error' }}">
+			{{ form_label(form.title, null, { label_attr: { class: 'ui-field__label' } }) }}
+			{{ form_widget(form.title, { attr: { class: 'ui-input', maxlength: 60, 'data-field': 'title' } }) }}
+			<div class="ui-field__counter" data-counter-for="title">0 / 60</div>
+			{% if form_errors(form.title) %}
+				<div class="ui-field__errors">{{ form_errors(form.title) }}</div>
+			{% endif %}
+		</div>
+
+		<div class="ui-field {{ form_errors(form.slug) ? 'ui-field--error' }}">
+			{{ form_label(form.slug, null, { label_attr: { class: 'ui-field__label' } }) }}
+			{{ form_widget(form.slug, { attr: { class: 'ui-input', pattern: '^[a-z0-9-]+$', 'data-field': 'slug' } }) }}
+			<div class="ui-field__hint">Можно оставить пустым — адрес сформируется из заголовка.</div>
+			{% if form_errors(form.slug) %}
+				<div class="ui-field__errors">{{ form_errors(form.slug) }}</div>
+			{% endif %}
+		</div>
+
+		{{ form_row(form.keywords, { row_attr: { class: 'ui-field' }, attr: { class: 'ui-input', maxlength: 255 } }) }}
+		{{ form_row(form.subtitle, { row_attr: { class: 'ui-field' }, attr: { class: 'ui-input', maxlength: 255, 'data-field': 'subtitle' } }) }}
+		<div class="ui-field__counter" data-counter-for="subtitle">0 / 255</div>
+	</div>
+</div>

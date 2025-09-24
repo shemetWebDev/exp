@@ -1,0 +1,241 @@
+/* 1) Сетка фильтров: от 1 колонки -> 2 -> 3 */
+.ads__filters {
+  display: grid;
+  gap: 12px;
+  margin-bottom: 20px;
+
+  /* узкие телефоны остаются в 1 колонку */
+  @media (min-width: 640px) {
+    /* ~sm */
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  @media (min-width: 960px) {
+    /* ~md/lg */
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+.search-form {
+  margin-top: 24px; /* можешь поставить 32px если нужно больше воздуха */
+}
+
+/* 2) Контрол: комфортная высота под палец, адекватные поля */
+.ads-filter__control {
+  width: 100%;
+  min-height: 46px; /* комфортный тап и выравнивание */
+  padding: 10px 40px 10px 14px;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background: #fff;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #0f172a;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease,
+    background-color 0.2s ease;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 18px 18px;
+  -webkit-tap-highlight-color: transparent;
+
+  &:hover {
+    border-color: rgb(0, 180, 216);
+  }
+  &:focus {
+    outline: none;
+    border-color: rgb(0, 180, 216);
+    box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.2);
+  }
+
+  &::placeholder {
+    color: #94a3b8;
+  }
+  &:disabled {
+    background-color: #f8fafc;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+}
+
+/* 3) Уточнения для совсем узких экранов (<= 360–400px) */
+@media (max-width: 400px) {
+  .ads__filters {
+    gap: 10px;
+  }
+  .ads-filter__control {
+    min-height: 44px;
+    font-size: 14px; /* чуть компактнее типографика */
+    padding: 9px 38px 9px 12px;
+    background-size: 16px 16px;
+    background-position: right 10px center;
+  }
+}
+
+/* 4) Landscape на телефонах: уменьшаем вертикальные отступы */
+@media (max-height: 420px) and (orientation: landscape) {
+  .ads__filters {
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .ads-filter__control {
+    min-height: 40px;
+  }
+}
+
+/* 5) Safe-area, если форма прижата к краям */
+.ads__filters {
+  padding-left: env(safe-area-inset-left, 0);
+  padding-right: env(safe-area-inset-right, 0);
+}
+
+/* 6) Тёмная тема (если у тебя включается авто) */
+@media (prefers-color-scheme: dark) {
+  .ads-filter__control {
+    background: #0b1220;
+    border-color: #1f2a3b;
+    color: #e5e7eb;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M6 8l4 4 4-4' stroke='%238ca3c0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    &:hover {
+      border-color: rgba(0, 180, 216, 0.7);
+    }
+    &:focus {
+      border-color: rgb(0, 180, 216);
+      box-shadow: 0 0 0 3px rgba(0, 180, 216, 0.25);
+    }
+  }
+}
+
+/* 7) Анимация — уважение reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ads-filter__control {
+    transition: none;
+  }
+}
+
+.ads-filter__label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #0f172a; /* темнее, чем серый */
+  margin-bottom: 4px;
+  letter-spacing: 0.2px;
+  display: block;
+
+  /* сделаем немного «воздуха» */
+  @media (min-width: 960px) {
+    font-size: 15px;
+  }
+}
+
+.ads-filter__label::after {
+  content: "";
+  display: block;
+  width: 20px;
+  height: 2px;
+  margin-top: 3px;
+  border-radius: 2px;
+  background: rgb(0, 180, 216); /* твой акцентный цвет */
+}
+
+/* Панель с лёгким фоном, чтобы фильтры и кнопки визуально отделялись */
+.search-form--panel {
+  margin-top: 28px;
+  padding: 14px;
+  border-radius: 16px;
+  background: #f6f8fb; /* мягкий серо-голубой фон */
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 18px rgba(2, 8, 23, 0.04);
+
+  @media (min-width: 640px) {
+    padding: 16px;
+  }
+  @media (min-width: 960px) {
+    padding: 18px;
+  }
+}
+
+/* Лейблы-заголовки — выразительнее */
+.ads-filter__label {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+  margin-bottom: 6px;
+  letter-spacing: 0.2px;
+  display: block;
+  position: relative;
+
+  &::after {
+    /* короткая акцентная черта под заголовком */
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -6px;
+    width: 22px;
+    height: 2px;
+    border-radius: 2px;
+    background: rgb(0, 180, 216);
+  }
+}
+
+/* Ряд действий — компактнее и понятнее */
+.search-form__actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: 6px;
+
+  @media (min-width: 960px) {
+    grid-column: 1 / -1; /* во всю ширину строки грида */
+    justify-content: flex-start;
+  }
+
+  /* на мобильных — во всю ширину */
+  @media (max-width: 639px) {
+    flex-direction: column;
+    align-items: stretch;
+
+    .ads__cta,
+    .ads__cta--ghost {
+      width: 100%;
+      justify-content: center;
+      min-height: 46px;
+    }
+  }
+}
+
+/* Подсказка под кнопками */
+.search-form__hint {
+  grid-column: 1 / -1;
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+/* Кнопки — слегка крупнее, чтобы ощущались «главными» */
+.ads__cta,
+.ads__cta--ghost {
+  font-size: 15px;
+  padding: 11px 16px;
+  border-radius: 12px;
+}
+
+/* Небольшой hover-контраст для ghost-кнопки */
+.ads__cta--ghost:hover {
+  background: rgba(0, 180, 216, 0.06);
+}
+
+/* Тёмная тема */
+@media (prefers-color-scheme: dark) {
+  .search-form--panel {
+    background: #0b1220;
+    border-color: #1f2a3b;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25);
+  }
+  .search-form__hint {
+    color: #94a3b8;
+  }
+  .ads-filter__label {
+    color: #e5e7eb;
+  }
+}

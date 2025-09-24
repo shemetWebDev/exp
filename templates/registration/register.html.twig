@@ -1,22 +1,38 @@
 {% extends 'base.html.twig' %}
-
-{% block title %}Register{% endblock %}
+{% set base = 'create-account' %}
 
 {% block body %}
-    <h1>Register</h1>
+	<section class="{{ base }}">
+		<div class="{{ base }}__card">
+			<h1 class="{{ base }}__title">Создай аккаунт</h1>
 
-    {{ form_errors(registrationForm) }}
+			{{ form_errors(registrationForm) }}
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.username, { label: 'Username' }) }}
-        {{ form_row(registrationForm.email, { label: 'Email' }) }}
-        {{ form_row(registrationForm.plainPassword, { label: 'Password' }) }}
-        {{ form_row(registrationForm.city, { label: 'City (France only)' }) }}
-        {{ form_row(registrationForm.code_post, { label: 'Postal Code' }) }}
-        {{ form_row(registrationForm.number_phone, { label: 'Phone Number' }) }}
-        {{ form_row(registrationForm.region, { label: 'Region' }) }}
-        {{ form_row(registrationForm.agreeTerms, { label: 'Agree to terms' }) }}
-
-        <button type="submit" class="btn btn-primary">Register</button>
-    {{ form_end(registrationForm) }}
+			{{ form_start(registrationForm, { attr: { class: base ~ '__form' } }) }}
+			{{ form_row(registrationForm.username, {
+          label: 'Имя', label_attr:{class: base~'__label'}, attr:{class: base~'__input'}
+        }) }}
+			{{ form_row(registrationForm.email, {
+          label: 'Email', label_attr:{class: base~'__label'}, attr:{class: base~'__input', autocomplete:'email'}
+        }) }}
+			{{ form_row(registrationForm.plainPassword, {
+          label: 'Пароль', label_attr:{class: base~'__label'}, attr:{class: base~'__input', autocomplete:'new-password'}
+        }) }}
+			{{ form_row(registrationForm.city, {
+          label: 'Город (только Франция)', label_attr:{class: base~'__label'}, attr:{class: base~'__input'}
+        }) }}
+			{{ form_row(registrationForm.code_post, {
+          label: 'Код города (Postal Code)', label_attr:{class: base~'__label'}, attr:{class: base~'__input', inputmode:'numeric'}
+        }) }}
+			{{ form_row(registrationForm.number_phone, {
+          label: 'Ваш номер', label_attr:{class: base~'__label'}, attr:{class: base~'__input', inputmode:'tel', autocomplete:'tel'}
+        }) }}
+			{{ form_row(registrationForm.region, {
+          label: 'Регион', label_attr:{class: base~'__label'}, attr:{class: base~'__input'}
+        }) }}
+			{{ form_row(registrationForm.agreeTerms, { label: 'Согласен с правилами сервиса' }) }}
+			<button type="submit" class="{{ base }}__submit">Создать аккаунт</button>
+			{{ form_end(registrationForm) }}
+		</div>
+	</section>
 {% endblock %}

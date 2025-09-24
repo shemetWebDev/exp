@@ -1,0 +1,233 @@
+.ads {
+  padding: 24px 0 40px;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: clamp(22px, 2.5vw, 28px);
+    font-weight: 800;
+    letter-spacing: 0.2px;
+  }
+
+  &__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: rgb(0, 180, 216);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 8px 18px rgba(0, 180, 216, 0.25);
+    transition: transform 0.06s ease, filter 0.2s ease;
+    &:hover {
+      filter: brightness(1.05);
+    }
+    &:active {
+      transform: translateY(1px);
+    }
+
+    &--ghost {
+      background: transparent;
+      color: rgb(0, 180, 216);
+      border: 1px solid rgba(0, 180, 216, 0.35);
+      box-shadow: none;
+    }
+  }
+
+  &__empty {
+    text-align: center;
+    padding: 32px 0 12px;
+    color: #6b7280;
+    display: grid;
+    gap: 12px;
+  }
+
+  &__grid {
+    display: grid;
+    gap: 18px;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+
+    @media (min-width: 560px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    @media (min-width: 960px) {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    @media (min-width: 1280px) {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+  }
+}
+
+.ad-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.06s ease;
+
+  &:hover {
+    box-shadow: 0 10px 28px rgba(2, 8, 23, 0.08);
+  }
+
+  &__media {
+    position: relative;
+    display: block;
+    aspect-ratio: 4 / 3;
+    background: #f3f4f6;
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s ease;
+  }
+  &:hover &__img {
+    transform: scale(1.02);
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+    color: #94a3b8;
+  }
+  &__ph-icon {
+    width: 48px;
+    height: 48px;
+  }
+
+  &__badge {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    backdrop-filter: blur(6px);
+  }
+
+  &__body {
+    display: grid;
+    gap: 8px;
+    padding: 12px;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.25;
+    a {
+      color: #0f172a;
+      text-decoration: none;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  &__meta {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    color: #475569;
+    font-size: 14px;
+    flex-wrap: wrap;
+  }
+  &__dot {
+    opacity: 0.6;
+  }
+
+  &__price {
+    font-weight: 800;
+    color: #0f172a;
+  }
+
+  &__desc {
+    color: #6b7280;
+    font-size: 14px;
+    margin: 4px 0 0;
+    min-height: 38px; /* 2 строки примерно */
+  }
+
+  &__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 4px;
+  }
+
+  &__date {
+    color: #94a3b8;
+    font-size: 12px;
+  }
+
+  &__more {
+    color: rgb(0, 180, 216);
+    text-decoration: none;
+    font-weight: 700;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.like {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.like__btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  border: 1px solid var(--stroke, #e7e9f0);
+  background: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.06s, filter 0.2s, border-color 0.2s;
+}
+.like__btn:hover {
+  filter: brightness(1.03);
+}
+.like__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.like__icon {
+  width: 18px;
+  height: 18px;
+  fill: #94a3b8;
+  transition: fill 0.15s;
+}
+.like__btn.is-liked {
+  border-color: color-mix(in srgb, var(--brand, #00b4d8) 40%, #fff);
+}
+.like__btn.is-liked .like__icon {
+  fill: var(--brand, #00b4d8);
+}
+.like__count {
+  font-size: 13px;
+  color: var(--muted, #5b6477);
+}

@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+{% set base = 'auth' %}
+
+{% block title %}Проверьте почту
+{% endblock %}
+
+{% block body %}
+	<section class="{{ base }}">
+		<div class="container">
+			<div class="{{ base }}__card">
+				<h1 class="{{ base }}__title">Проверьте почту</h1>
+				<p class="{{ base }}__hint">
+					Если аккаунт с таким e-mail существует, мы только что отправили письмо со ссылкой для сброса пароля.
+					        Ссылка действует
+					{{ resetToken.expirationMessageKey|trans(resetToken.expirationMessageData, 'ResetPasswordBundle') }}.
+				</p>
+				<p class="{{ base }}__small">
+					Не пришло письмо? Проверьте папку «Спам» или
+					<a class="{{ base }}__link" href="{{ path('app_forgot_password_request') }}">запросите ещё раз</a>.
+				</p>
+				<div class="{{ base }}__actions">
+					<a class="btn btn--soft" href="{{ path('app_login') }}">Вернуться ко входу</a>
+				</div>
+			</div>
+		</div>
+	</section>
+{% endblock %}

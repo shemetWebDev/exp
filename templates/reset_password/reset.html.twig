@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+{% set base = 'auth' %}
+
+{% block title %}Новый пароль
+{% endblock %}
+
+{% block body %}
+	<section class="{{ base }}">
+		<div class="container">
+			<div class="{{ base }}__card">
+				<h1 class="{{ base }}__title">Создайте новый пароль</h1>
+				<p class="{{ base }}__hint">Введите новый пароль и сохраните изменения.</p>
+
+				{{ form_start(resetForm, { attr: { class: base ~ '__form', novalidate: 'novalidate' } }) }}
+				{{ form_label(resetForm.plainPassword, 'Новый пароль', { label_attr: { class: base ~ '__label' } }) }}
+				{{ form_widget(resetForm.plainPassword, { attr: {
+          class: base ~ '__input',
+          autocomplete: 'new-password',
+          placeholder: '••••••••'
+        }}) }}
+				{{ form_errors(resetForm.plainPassword) }}
+
+				<div class="{{ base }}__actions">
+					<button class="btn btn--primary btn--lg">Сохранить пароль</button>
+					<a class="btn btn--soft" href="{{ path('app_login') }}">Вернуться ко входу</a>
+				</div>
+				{{ form_end(resetForm) }}
+			</div>
+		</div>
+	</section>
+{% endblock %}
