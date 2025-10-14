@@ -25,6 +25,9 @@ class ArticleController extends AbstractController
         'image/webp',
         'image/gif',
         'application/pdf',
+        'application/x-pdf',
+        'application/acrobat',
+        'application/octet-stream',
     ];
     private const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
 
@@ -100,7 +103,6 @@ class ArticleController extends AbstractController
             return $this->redirectToRoute('article_list');
         }
 
-        // удалить файлы с диска
         $fs  = new Filesystem();
         $dir = $this->getParameter('documents_directory');
         foreach ($article->getDocuments() as $doc) {
@@ -167,14 +169,21 @@ class ArticleController extends AbstractController
     {
         $uploadDir = $this->getParameter('documents_directory');
 
+        // ✅ Создаём папку при необходимости
+        $fs = new Filesystem();
+        if (!$fs->exists($uploadDir)) {
+            $fs->mkdir($uploadDir, 0775);
+        }
+
         /** @var UploadedFile $file */
         foreach ($files as $file) {
             if (!$file instanceof UploadedFile) {
                 continue;
             }
 
-            // размер
-            if ($file->getSize() > self::MAX_SIZE_BYTES) {
+            // Размер
+            $size = $file->getSize();
+            if ($size > self::MAX_SIZE_BYTES) {
                 return sprintf(
                     'Файл "%s" превышает лимит %d МБ.',
                     $file->getClientOriginalName(),
@@ -182,13 +191,13 @@ class ArticleController extends AbstractController
                 );
             }
 
-            // mime
+            // MIME
             $mime = (string) $file->getMimeType();
             if (!in_array($mime, self::ALLOWED_MIME, true)) {
                 return sprintf('Недопустимый тип файла "%s" (%s).', $file->getClientOriginalName(), $mime);
             }
 
-            // безопасное имя
+            // Имя файла
             $original = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $safeName = $this->slugger->slug((string) $original)->lower();
             $ext      = $file->guessExtension()
@@ -199,14 +208,14 @@ class ArticleController extends AbstractController
             try {
                 $file->move($uploadDir, $newName);
             } catch (FileException $e) {
-                return 'Ошибка при сохранении файла. Попробуйте ещё раз.';
+                return 'Ошибка при сохранении файла: ' . $e->getMessage();
             }
 
             $doc = new Documents();
             $doc->setPath($newName);
             $doc->setType($mime);
             $doc->setOriginalName($file->getClientOriginalName());
-            $doc->setSize($file->getSize() ?: null);
+            $doc->setSize($size ?: null); // ✅ используем сохранённый размер
             $doc->setArticle($article);
 
             $this->em->persist($doc);
