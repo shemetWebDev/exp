@@ -228,3 +228,23 @@
   color: #64748b;
   font-size: 13px;
 }
+
+.article__admin {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.article__delete-btn {
+  background: #d9534f;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s ease;
+}
+
+.article__delete-btn:hover {
+  background: #c9302c;
+}

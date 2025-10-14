@@ -21,7 +21,9 @@
 			<header class="article__head">
 				<h1 class="article__title">{{ article.title }}</h1>
 				{% if article.createAt %}
-					<time class="article__date" datetime="{{ article.createAt|date('c') }}">{{ article.createAt|date('d.m.Y') }}</time>
+					<time class="article__date" datetime="{{ article.createAt|date('c') }}">
+						{{ article.createAt|date('d.m.Y') }}
+					</time>
 				{% endif %}
 			</header>
 
@@ -38,8 +40,8 @@
 					<ul class="article__file-list">
 						{% for document in article.documents %}
 							{% set href = document.id is defined
-              ? path('document_download', { id: document.id })
-              : asset('uploads/pdf/' ~ document.path) %}
+							? path('document_download', { id: document.id })
+							: asset('uploads/pdf/' ~ document.path) %}
 							<li class="article__file-item">
 								<a class="article__file-link" href="{{ href }}" target="_blank" rel="noopener">
 									{{ document.originalName ?? document.path }}
@@ -47,11 +49,25 @@
 								{% if document.size %}
 									<span class="article__file-size">·
 										{{ (document.size / 1024)|round(0, 'ceil') }}
-										КБ</span>
+										КБ
+									</span>
 								{% endif %}
 							</li>
 						{% endfor %}
 					</ul>
+				</section>
+			{% endif %}
+
+			{# 🔥 Кнопка удаления — только для администратора #}
+			{% if is_granted('ROLE_ADMIN') %}
+				<section class="article__admin">
+					<form action="{{ path('article_delete', { id: article.id }) }}" method="post" onsubmit="return confirm('Удалить статью «{{ article.title }}»?');">
+
+						<input type="hidden" name="_token" value="{{ csrf_token('delete_article_' ~ article.id) }}">
+						<button type="submit" class="article__delete-btn">
+							🗑 Удалить статью
+						</button>
+					</form>
 				</section>
 			{% endif %}
 		</div>
@@ -59,11 +75,11 @@
 
 	{# JSON-LD #}
 	{% set ld = {
-  '@context': 'https://schema.org',
-  '@type': 'Article',
-  'headline': article.title,
-  'datePublished': article.createAt ? article.createAt|date('c') : null,
-  'mainEntityOfPage': app.request.uri
+	'@context': 'https://schema.org',
+	'@type': 'Article',
+	'headline': article.title,
+	'datePublished': article.createAt ? article.createAt|date('c') : null,
+	'mainEntityOfPage': app.request.uri
 } %}
 	<script type="application/ld+json">{{ ld|json_encode(constant('JSON_UNESCAPED_UNICODE'))|raw }}</script>
 {% endblock %}
