@@ -73,7 +73,7 @@ class ResetPasswordController extends AbstractController
 
         $token = $this->getTokenFromSession();
         if (null === $token) {
-            throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
+            throw $this->createNotFoundException('No reset password token found.');
         }
 
         try {
@@ -96,8 +96,8 @@ class ResetPasswordController extends AbstractController
 
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $this->entityManager->flush();
-
             $this->cleanSessionAfterReset();
+
             return $this->redirectToRoute('app_login');
         }
 
@@ -119,9 +119,8 @@ class ResetPasswordController extends AbstractController
             return $this->redirectToRoute('app_check_email');
         }
 
-        // --- ручной SMTP-транспорт (стабильный) ---
         $dsn = $_ENV['MAILER_DSN'] ??
-            'smtp://contact@expfr.fr:Shemet_21%21@ssl0.ovh.net:587?encryption=tls&verify_peer=false&auth_mode=login';
+            'smtp://contact@expfr.fr:Shemet_21%21@ssl0.ovh.net:587?encryption=tls&verify_peer=0&auth_mode=login';
         $transport = Transport::fromDsn($dsn);
         $mailer = new Mailer($transport);
 
