@@ -6,13 +6,14 @@ use App\Entity\User;
 use App\Form\ChangePasswordFormType;
 use App\Form\ResetPasswordRequestFormType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Transport;
 use Symfony\Component\Mailer\Mailer;
-use Symfony\Component\Mime\Email;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -71,7 +72,6 @@ class ResetPasswordController extends AbstractController
         }
 
         $token = $this->getTokenFromSession();
-
         if (null === $token) {
             throw $this->createNotFoundException('No reset password token found in the URL or in the session.');
         }
@@ -93,8 +93,10 @@ class ResetPasswordController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->resetPasswordHelper->removeResetRequest($token);
             $plainPassword = $form->get('plainPassword')->getData();
+
             $user->setPassword($passwordHasher->hashPassword($user, $plainPassword));
             $this->entityManager->flush();
+
             $this->cleanSessionAfterReset();
             return $this->redirectToRoute('app_login');
         }
@@ -106,50 +108,33 @@ class ResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, TranslatorInterface $translator): RedirectResponse
     {
-        $logFile = '/var/www/html/var/log/mailer_debug.log';
-        file_put_contents($logFile, "\n=== PASSWORD RESET REQUEST (MANUAL TRANSPORT TEST) ===\n", FILE_APPEND);
-        file_put_contents($logFile, "Time: " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
-        file_put_contents($logFile, "Email input: {$emailFormData}\n", FILE_APPEND);
-
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $emailFormData]);
         if (!$user) {
-            file_put_contents($logFile, "⚠️ User not found for email: {$emailFormData}\n", FILE_APPEND);
             return $this->redirectToRoute('app_check_email');
         }
-
-        file_put_contents($logFile, "✅ User found: ID {$user->getId()}, Email: {$user->getEmail()}\n", FILE_APPEND);
 
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-            file_put_contents($logFile, "Generated reset token: {$resetToken->getToken()}\n", FILE_APPEND);
-        } catch (ResetPasswordExceptionInterface $e) {
-            file_put_contents($logFile, "❌ Token generation error: {$e->getMessage()}\n", FILE_APPEND);
+        } catch (ResetPasswordExceptionInterface) {
             return $this->redirectToRoute('app_check_email');
         }
 
-        try {
-            // 👇 Создаём транспорт вручную — как в test_mail.php
-            $dsn = $_ENV['MAILER_DSN'] ?? 'smtp://contact@expfr.fr:Shemet_21%21@ssl0.ovh.net:587?encryption=tls&verify_peer=false&auth_mode=login';
-            $transport = Transport::fromDsn($dsn);
-            $mailer = new Mailer($transport);
+        // --- ручной SMTP-транспорт (стабильный) ---
+        $dsn = $_ENV['MAILER_DSN'] ??
+            'smtp://contact@expfr.fr:Shemet_21%21@ssl0.ovh.net:587?encryption=tls&verify_peer=false&auth_mode=login';
+        $transport = Transport::fromDsn($dsn);
+        $mailer = new Mailer($transport);
 
-            $email = (new Email())
-                ->from('contact@expfr.fr')
-                ->to($user->getEmail())
-                ->subject('ExpFr.fr – Проверка ручного транспорта')
-                ->text("Тестовое письмо от ExpFr.fr\n\nЕсли вы видите это сообщение — всё работает ✅\n\nВремя: " . date('Y-m-d H:i:s'));
+        $email = (new TemplatedEmail())
+            ->from(new Address('contact@expfr.fr', 'ExpFr.fr Support'))
+            ->to($user->getEmail())
+            ->subject('Восстановление пароля на ExpFr.fr')
+            ->htmlTemplate('reset_password/email.html.twig')
+            ->context(['resetToken' => $resetToken]);
 
-            file_put_contents($logFile, "About to send test email via manual transport...\n", FILE_APPEND);
-            set_time_limit(15);
-            $mailer->send($email);
-            file_put_contents($logFile, "✅ Manual transport email successfully sent to {$user->getEmail()}\n", FILE_APPEND);
-        } catch (\Throwable $e) {
-            file_put_contents($logFile, "❌ MAIL SEND ERROR: {$e->getMessage()}\n", FILE_APPEND);
-            file_put_contents($logFile, $e->getTraceAsString() . "\n", FILE_APPEND);
-        }
+        $mailer->send($email);
 
         $this->setTokenObjectInSession($resetToken);
-        file_put_contents($logFile, "Redirecting to check-email\n=== PASSWORD RESET REQUEST END ===\n\n", FILE_APPEND);
         return $this->redirectToRoute('app_check_email');
     }
 }
