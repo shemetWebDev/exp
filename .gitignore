@@ -33,3 +33,18 @@
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+###> custom ignore rules (uploads, envs, editor) ###
+# User uploads and generated media
+/public/uploads/
+/public/uploads/*
+
+# Local environment files
+.env.local
+.env.dev.local
+.env.prod.local
+
+# IDE and editor folders
+.idea/
+.vscode/
+*.log
+###< custom ignore rules ###
