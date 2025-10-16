@@ -6,28 +6,29 @@
 	| ExpFR
 {% endblock %}
 
-{# 🔹 МЕТА-ТЕГИ для предпросмотра в Telegram / WhatsApp / Facebook / X (Twitter) #}
+{# 🔹 МЕТА-ТЕГИ (OpenGraph + Twitter) для предпросмотра Telegram / WhatsApp / Facebook #}
 {% block meta %}
-	<meta property="og:title" content="{{ ad.title|e }}"/>
-	<meta property="og:description" content="{{ ad.description|striptags|trim|slice(0, 160) }}"/>
-	<meta property="og:type" content="article"/>
-	<meta property="og:url" content="{{ absolute_url(path('app_ads_show', {'id': ad.id})) }}"/>
-
-	{% if ad.photos is defined and ad.photos|length > 0 %}
-		<meta property="og:image" content="{{ absolute_url(asset('uploads/ads/' ~ (ad.photos[0] is iterable ? ad.photos[0] : ad.photos))) }}"/>
+	{% set mainImage = '' %}
+	{% if ad.photos is iterable and ad.photos|length > 0 %}
+		{% set mainImage = asset('uploads/ads/' ~ ad.photos[0]) %}
+	{% elseif ad.photo is defined and ad.photo %}
+		{% set mainImage = asset('uploads/ads/' ~ ad.photo) %}
 	{% else %}
-		<meta property="og:image" content="{{ absolute_url(asset('images/no-photo.jpg')) }}"/>
+		{% set mainImage = asset('images/no-photo.jpg') %}
 	{% endif %}
 
+	<meta property="og:title" content="{{ ad.title|e }}"/>
+	<meta property="og:description" content="{{ ad.description|striptags|trim|slice(0, 180) }}"/>
+	<meta property="og:type" content="article"/>
+	<meta property="og:url" content="{{ absolute_url(path('app_ads_show', {'id': ad.id})) }}"/>
+	<meta property="og:image" content="{{ absolute_url(mainImage) }}"/>
 	<meta property="og:site_name" content="ExpFR.fr"/>
 	<meta property="og:locale" content="fr_FR"/>
 
 	<meta name="twitter:card" content="summary_large_image"/>
 	<meta name="twitter:title" content="{{ ad.title|e }}"/>
-	<meta name="twitter:description" content="{{ ad.description|striptags|trim|slice(0, 160) }}"/>
-	{% if ad.photos is defined and ad.photos|length > 0 %}
-		<meta name="twitter:image" content="{{ absolute_url(asset('uploads/ads/' ~ (ad.photos[0] is iterable ? ad.photos[0] : ad.photos))) }}"/>
-	{% endif %}
+	<meta name="twitter:description" content="{{ ad.description|striptags|trim|slice(0, 180) }}"/>
+	<meta name="twitter:image" content="{{ absolute_url(mainImage) }}"/>
 {% endblock %}
 
 {% block stylesheets %}
@@ -37,16 +38,13 @@
 
 {% block body %}
 	{% set images = [] %}
-	{% if ad.photos is defined and ad.photos is iterable and ad.photos|length > 0 %}
+	{% if ad.photos is iterable and ad.photos|length > 0 %}
 		{% set images = ad.photos %}
-	{% elseif ad.photos is defined and ad.photos is not iterable and ad.photos %}
-		{% set images = [ad.photos] %}
 	{% elseif ad.photo is defined and ad.photo %}
 		{% set images = [ad.photo] %}
 	{% endif %}
 
 	<div class="ad-page">
-
 		<header class="ad-hero">
 			<h1 class="ad-hero__title">{{ ad.title }}</h1>
 
@@ -65,14 +63,11 @@
 						({{ ad.posteCode }})
 					{% endif %}
 				</span>
-
 				<span class="ad-hero__dot">•</span>
-
 				<time datetime="{{ ad.createdAt ? ad.createdAt|date('c') : '' }}">
 					Создано:
 					{{ ad.createdAt ? ad.createdAt|date('d.m.Y H:i') : '' }}
 				</time>
-
 				<span class="ad-hero__dot">•</span>
 				{% include 'ads/_like.html.twig' with { ad: ad } %}
 			</div>
@@ -93,7 +88,6 @@
 									<img class="ad-gallery__img" src="{{ asset('uploads/ads/' ~ src) }}" alt="{{ ad.title ~ ' — фото ' ~ loop.index ~ ' из ' ~ images|length }}" loading="lazy" draggable="false"/>
 								</div>
 							{% endfor %}
-
 							{% if images|length > 1 %}
 								<button type="button" class="ad-gallery__nav ad-gallery__nav--prev" data-prev aria-label="Предыдущее фото">‹</button>
 								<button type="button" class="ad-gallery__nav ad-gallery__nav--next" data-next aria-label="Следующее фото">›</button>
@@ -162,7 +156,7 @@
 		</div>
 	</div>
 
-	{# Модальное окно для просмотра изображений (лайтбокс) #}
+	{# Лайтбокс для изображений #}
 	<div class="ad-lightbox" data-lightbox hidden>
 		<button type="button" class="ad-lightbox__close" data-close aria-label="Закрыть">×</button>
 		<img class="ad-lightbox__img" alt="Просмотр изображения">
