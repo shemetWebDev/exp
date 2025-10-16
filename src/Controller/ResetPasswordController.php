@@ -10,7 +10,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Component\Mailer\Transport;
+use Symfony\Component\Mailer\Mailer;
 use Symfony\Component\Mime\Email;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
@@ -30,14 +31,14 @@ class ResetPasswordController extends AbstractController
     ) {}
 
     #[Route('', name: 'app_forgot_password_request')]
-    public function request(Request $request, MailerInterface $mailer, TranslatorInterface $translator): Response
+    public function request(Request $request, TranslatorInterface $translator): Response
     {
         $form = $this->createForm(ResetPasswordRequestFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $email = $form->get('email')->getData();
-            return $this->processSendingPasswordResetEmail($email, $mailer, $translator);
+            return $this->processSendingPasswordResetEmail($email, $translator);
         }
 
         return $this->render('reset_password/request.html.twig', [
@@ -103,17 +104,14 @@ class ResetPasswordController extends AbstractController
         ]);
     }
 
-    private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
+    private function processSendingPasswordResetEmail(string $emailFormData, TranslatorInterface $translator): RedirectResponse
     {
         $logFile = '/var/www/html/var/log/mailer_debug.log';
-        file_put_contents($logFile, "\n=== PASSWORD RESET REQUEST START (TEXT-ONLY TEST) ===\n", FILE_APPEND);
+        file_put_contents($logFile, "\n=== PASSWORD RESET REQUEST (MANUAL TRANSPORT TEST) ===\n", FILE_APPEND);
         file_put_contents($logFile, "Time: " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
         file_put_contents($logFile, "Email input: {$emailFormData}\n", FILE_APPEND);
-        file_put_contents($logFile, "APP_ENV=" . ($_ENV['APP_ENV'] ?? 'undefined') . "\n", FILE_APPEND);
-        file_put_contents($logFile, "MAILER_DSN=" . ($_ENV['MAILER_DSN'] ?? 'undefined') . "\n", FILE_APPEND);
 
         $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => $emailFormData]);
-
         if (!$user) {
             file_put_contents($logFile, "⚠️ User not found for email: {$emailFormData}\n", FILE_APPEND);
             return $this->redirectToRoute('app_check_email');
@@ -130,23 +128,21 @@ class ResetPasswordController extends AbstractController
         }
 
         try {
+            // 👇 Создаём транспорт вручную — как в test_mail.php
+            $dsn = $_ENV['MAILER_DSN'] ?? 'smtp://contact@expfr.fr:Shemet_21%21@ssl0.ovh.net:587?encryption=tls&verify_peer=false&auth_mode=login';
+            $transport = Transport::fromDsn($dsn);
+            $mailer = new Mailer($transport);
+
             $email = (new Email())
                 ->from('contact@expfr.fr')
                 ->to($user->getEmail())
-                ->subject('ExpFr.fr – Тестовое письмо без ссылки')
-                ->text(
-                    "Здравствуйте!\n\n" .
-                        "Это тестовое письмо без ссылок.\n" .
-                        "Проверяем, дойдет ли оно до Gmail.\n\n" .
-                        "Ваш сервер работает корректно ✅\n" .
-                        "ID пользователя: {$user->getId()}\n" .
-                        "Время: " . date('Y-m-d H:i:s') . "\n\n" .
-                        "Если вы видите это письмо — SMTP и конфигурация полностью рабочие."
-                );
+                ->subject('ExpFr.fr – Проверка ручного транспорта')
+                ->text("Тестовое письмо от ExpFr.fr\n\nЕсли вы видите это сообщение — всё работает ✅\n\nВремя: " . date('Y-m-d H:i:s'));
 
-            file_put_contents($logFile, "About to send plain text email (no links)...\n", FILE_APPEND);
+            file_put_contents($logFile, "About to send test email via manual transport...\n", FILE_APPEND);
+            set_time_limit(15);
             $mailer->send($email);
-            file_put_contents($logFile, "✅ Plain text email sent to {$user->getEmail()}\n", FILE_APPEND);
+            file_put_contents($logFile, "✅ Manual transport email successfully sent to {$user->getEmail()}\n", FILE_APPEND);
         } catch (\Throwable $e) {
             file_put_contents($logFile, "❌ MAIL SEND ERROR: {$e->getMessage()}\n", FILE_APPEND);
             file_put_contents($logFile, $e->getTraceAsString() . "\n", FILE_APPEND);
