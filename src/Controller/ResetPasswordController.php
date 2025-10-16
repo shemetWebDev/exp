@@ -128,6 +128,7 @@ class ResetPasswordController extends AbstractController
             ->from(new Address('contact@expfr.fr', 'ExpFr.fr Support'))
             ->to($user->getEmail())
             ->subject('Восстановление пароля на ExpFr.fr')
+            ->text("Чтобы сбросить пароль, перейдите по ссылке: https://expfr.fr/reset-password/reset/" . $resetToken->getToken())
             ->htmlTemplate('reset_password/email.html.twig')
             ->context(['resetToken' => $resetToken]);
 
