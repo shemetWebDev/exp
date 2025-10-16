@@ -106,7 +106,7 @@ class ResetPasswordController extends AbstractController
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
         $logFile = '/var/www/html/var/log/mailer_debug.log';
-        file_put_contents($logFile, "\n=== PASSWORD RESET REQUEST START ===\n", FILE_APPEND);
+        file_put_contents($logFile, "\n=== PASSWORD RESET REQUEST START (TEXT-ONLY TEST) ===\n", FILE_APPEND);
         file_put_contents($logFile, "Time: " . date('Y-m-d H:i:s') . "\n", FILE_APPEND);
         file_put_contents($logFile, "Email input: {$emailFormData}\n", FILE_APPEND);
         file_put_contents($logFile, "APP_ENV=" . ($_ENV['APP_ENV'] ?? 'undefined') . "\n", FILE_APPEND);
@@ -123,9 +123,7 @@ class ResetPasswordController extends AbstractController
 
         try {
             $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-            $link = "https://expfr.fr/reset-password/reset/" . $resetToken->getToken();
             file_put_contents($logFile, "Generated reset token: {$resetToken->getToken()}\n", FILE_APPEND);
-            file_put_contents($logFile, "Generated reset link: {$link}\n", FILE_APPEND);
         } catch (ResetPasswordExceptionInterface $e) {
             file_put_contents($logFile, "❌ Token generation error: {$e->getMessage()}\n", FILE_APPEND);
             return $this->redirectToRoute('app_check_email');
@@ -135,18 +133,20 @@ class ResetPasswordController extends AbstractController
             $email = (new Email())
                 ->from('contact@expfr.fr')
                 ->to($user->getEmail())
-                ->subject('ExpFr.fr – восстановление пароля')
-                ->text("Здравствуйте!\n\nЧтобы сбросить пароль, перейдите по ссылке:\n{$link}\n\nЕсли вы не запрашивали сброс, просто проигнорируйте это письмо.")
-                ->html("
-                    <h2 style='margin-bottom:10px;color:#0f172a;'>Восстановление пароля</h2>
-                    <p>Чтобы сбросить пароль, перейдите по ссылке:</p>
-                    <p><a href='{$link}' style='color:#00b4d8;text-decoration:none;'>{$link}</a></p>
-                    <p style='color:#475569;'>Если вы не запрашивали сброс, просто проигнорируйте это письмо.</p>
-                ");
+                ->subject('ExpFr.fr – Тестовое письмо без ссылки')
+                ->text(
+                    "Здравствуйте!\n\n" .
+                        "Это тестовое письмо без ссылок.\n" .
+                        "Проверяем, дойдет ли оно до Gmail.\n\n" .
+                        "Ваш сервер работает корректно ✅\n" .
+                        "ID пользователя: {$user->getId()}\n" .
+                        "Время: " . date('Y-m-d H:i:s') . "\n\n" .
+                        "Если вы видите это письмо — SMTP и конфигурация полностью рабочие."
+                );
 
-            file_put_contents($logFile, "About to send email...\n", FILE_APPEND);
+            file_put_contents($logFile, "About to send plain text email (no links)...\n", FILE_APPEND);
             $mailer->send($email);
-            file_put_contents($logFile, "✅ Email successfully sent to {$user->getEmail()}\n", FILE_APPEND);
+            file_put_contents($logFile, "✅ Plain text email sent to {$user->getEmail()}\n", FILE_APPEND);
         } catch (\Throwable $e) {
             file_put_contents($logFile, "❌ MAIL SEND ERROR: {$e->getMessage()}\n", FILE_APPEND);
             file_put_contents($logFile, $e->getTraceAsString() . "\n", FILE_APPEND);
