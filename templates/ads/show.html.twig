@@ -6,7 +6,6 @@
 	| ExpFR
 {% endblock %}
 
-{# 🔹 МЕТА-ТЕГИ (OpenGraph + Twitter) для предпросмотра Telegram / WhatsApp / Facebook #}
 {% block meta %}
 	{% set mainImage = '' %}
 	{% if ad.photos is iterable and ad.photos|length > 0 %}
@@ -68,6 +67,17 @@
 					Создано:
 					{{ ad.createdAt ? ad.createdAt|date('d.m.Y H:i') : '' }}
 				</time>
+
+				{# 👁 БЛОК С ПРОСМОТРАМИ — ВОССТАНОВЛЕН #}
+				{% if ad.views is defined %}
+					<span class="ad-hero__dot">•</span>
+					<span class="ad-hero__views">
+						👁
+						{{ ad.views }}
+						{{ ad.views == 1 ? 'просмотр' : (ad.views < 5 ? 'просмотра' : 'просмотров') }}
+					</span>
+				{% endif %}
+
 				<span class="ad-hero__dot">•</span>
 				{% include 'ads/_like.html.twig' with { ad: ad } %}
 			</div>
@@ -156,7 +166,7 @@
 		</div>
 	</div>
 
-	{# Лайтбокс для изображений #}
+	{# Лайтбокс #}
 	<div class="ad-lightbox" data-lightbox hidden>
 		<button type="button" class="ad-lightbox__close" data-close aria-label="Закрыть">×</button>
 		<img class="ad-lightbox__img" alt="Просмотр изображения">
