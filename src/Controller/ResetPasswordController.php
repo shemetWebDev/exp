@@ -133,45 +133,49 @@ class ResetPasswordController extends AbstractController
 
     private function processSendingPasswordResetEmail(string $emailFormData, MailerInterface $mailer, TranslatorInterface $translator): RedirectResponse
     {
+        $logFile = '/var/www/html/var/log/mailer_debug.log';
+        file_put_contents($logFile, "=== PASSWORD RESET REQUEST ===\n", FILE_APPEND);
+
         $user = $this->entityManager->getRepository(User::class)->findOneBy([
             'email' => $emailFormData,
         ]);
 
-        // Do not reveal whether a user account was found or not.
         if (!$user) {
+            file_put_contents($logFile, "User not found for email: $emailFormData\n", FILE_APPEND);
+            return $this->redirectToRoute('app_check_email');
+        }
+
+        file_put_contents($logFile, "User found: ID {$user->getId()}, Email: {$user->getEmail()}\n", FILE_APPEND);
+
+        try {
+            $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+            file_put_contents($logFile, "Generated token: {$resetToken->getToken()}\n", FILE_APPEND);
+        } catch (ResetPasswordExceptionInterface $e) {
+            file_put_contents($logFile, "Token generation error: {$e->getMessage()}\n", FILE_APPEND);
             return $this->redirectToRoute('app_check_email');
         }
 
         try {
-            $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-        } catch (ResetPasswordExceptionInterface $e) {
-            // If you want to tell the user why a reset email was not sent, uncomment
-            // the lines below and change the redirect to 'app_forgot_password_request'.
-            // Caution: This may reveal if a user is registered or not.
-            //
-            // $this->addFlash('reset_password_error', sprintf(
-            //     '%s - %s',
-            //     $translator->trans(ResetPasswordExceptionInterface::MESSAGE_PROBLEM_HANDLE, [], 'ResetPasswordBundle'),
-            //     $translator->trans($e->getReason(), [], 'ResetPasswordBundle')
-            // ));
+            $email = (new TemplatedEmail())
+                ->from(new Address('contact@expfr.fr', 'ExpFr.fr Support'))
+                ->to((string) $user->getEmail())
+                ->subject('Your password reset request')
+                ->htmlTemplate('reset_password/email.html.twig')
+                ->context([
+                    'resetToken' => $resetToken,
+                ]);
 
-            return $this->redirectToRoute('app_check_email');
+            $mailer->send($email);
+
+            file_put_contents($logFile, "Email sent successfully to {$user->getEmail()}\n", FILE_APPEND);
+        } catch (\Throwable $e) {
+            file_put_contents($logFile, "MAIL SEND ERROR: {$e->getMessage()}\n", FILE_APPEND);
+            file_put_contents($logFile, $e->getTraceAsString() . "\n", FILE_APPEND);
         }
 
-        $email = (new TemplatedEmail())
-            ->from(new Address('contact@expfr.fr', 'ExpFr.fr Support'))
-            ->to((string) $user->getEmail())
-            ->subject('Your password reset request')
-            ->htmlTemplate('reset_password/email.html.twig')
-            ->context([
-                'resetToken' => $resetToken,
-            ]);
-
-        $mailer->send($email);
-
-        // Store the token object in session for retrieval in check-email route.
         $this->setTokenObjectInSession($resetToken);
 
+        file_put_contents($logFile, "Redirecting to check-email\n\n", FILE_APPEND);
         return $this->redirectToRoute('app_check_email');
     }
 }
