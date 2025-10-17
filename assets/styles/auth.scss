@@ -156,3 +156,152 @@
     font-size: 14px;
   }
 }
+
+/* ===== Password Reset Form ===== */
+.reset {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+  padding: 40px 16px;
+}
+
+.reset__wrapper {
+  width: 100%;
+  max-width: 440px;
+}
+
+.reset__card {
+  background: #ffffff;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  padding: 40px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  animation: fadeIn 0.4s ease;
+}
+
+.reset__title {
+  font-size: clamp(22px, 3vw, 28px);
+  font-weight: 800;
+  color: #0f172a;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.reset__subtitle {
+  text-align: center;
+  color: #64748b;
+  font-size: 15px;
+  margin-bottom: 10px;
+}
+
+.reset__form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reset__group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reset__label {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1e293b;
+}
+
+.reset__input {
+  height: 48px;
+  padding: 0 14px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #f9fafb;
+  font-size: 15px;
+  color: #0f172a;
+  transition: all 0.2s ease;
+}
+
+.reset__input::placeholder {
+  color: #94a3b8;
+}
+
+.reset__input:focus {
+  border-color: #6366f1;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+  outline: none;
+}
+
+.reset__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+}
+
+.btn--primary {
+  background: #3b82f6;
+  color: #fff;
+  border: none;
+}
+
+.btn--primary:hover {
+  background: #2563eb;
+}
+
+.btn--link {
+  background: transparent;
+  color: #334155;
+  font-weight: 600;
+}
+
+.btn--link:hover {
+  color: #1e3a8a;
+}
+
+/* Анимация */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Мобайл адаптив */
+@media (max-width: 600px) {
+  .reset__card {
+    padding: 28px 22px;
+    border-radius: 16px;
+  }
+
+  .reset__title {
+    font-size: 22px;
+  }
+
+  .btn {
+    font-size: 14px;
+  }
+}
