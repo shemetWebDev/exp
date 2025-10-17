@@ -8,6 +8,7 @@
 	<section class="{{ base }}">
 		<div class="container">
 			<div class="{{ base }}__card">
+
 				<div class="{{ base }}__notice" role="note">
 					<span class="{{ base }}__notice-text">Вспомнили пароль?</span>
 					<a href="{{ path('app_login') }}" class="{{ base }}__notice-link">Войти</a>
@@ -25,15 +26,15 @@
 				{{ form_start(requestForm, { attr: { class: base ~ '__form', novalidate: 'novalidate' } }) }}
 				{{ form_label(requestForm.email, 'E-mail', { label_attr: { class: base ~ '__label' } }) }}
 				{{ form_widget(requestForm.email, { attr: {
-            class: base ~ '__input',
-            placeholder: 'name@email.com',
-            autocomplete: 'email'
+          class: base ~ '__input',
+          placeholder: 'name@email.com',
+          autocomplete: 'email'
         }}) }}
 				{{ form_errors(requestForm.email) }}
 
 				<div class="{{ base }}__actions">
-					<button class="btn btn--primary btn--lg" type="submit">Отправить ссылку</button>
-					<a class="btn btn--soft" href="{{ path('app_login') }}">Отмена</a>
+					<button class="{{ base }}__btn {{ base }}__btn--primary" type="submit">Отправить ссылку</button>
+					<a class="{{ base }}__btn {{ base }}__btn--soft" href="{{ path('app_login') }}">Отмена</a>
 				</div>
 				{{ form_end(requestForm) }}
 			</div>
