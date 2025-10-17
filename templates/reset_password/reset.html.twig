@@ -12,6 +12,7 @@
 				<p class="{{ base }}__subtitle">Введите новый пароль и сохраните изменения.</p>
 
 				{{ form_start(resetForm, { attr: { class: base ~ '__form', novalidate: 'novalidate' } }) }}
+
 				<div class="{{ base }}__group">
 					{{ form_label(resetForm.plainPassword.first, 'Новый пароль', { label_attr: { class: base ~ '__label' } }) }}
 					{{ form_widget(resetForm.plainPassword.first, { attr: {
@@ -33,9 +34,10 @@
 				</div>
 
 				<div class="{{ base }}__actions">
-					<button class="btn btn--primary" type="submit">Сохранить пароль</button>
-					<a class="btn btn--link" href="{{ path('app_login') }}">Вернуться ко входу</a>
+					<button class="{{ base }}__btn {{ base }}__btn--primary" type="submit">Сохранить пароль</button>
+					<a class="{{ base }}__btn {{ base }}__btn--link" href="{{ path('app_login') }}">Вернуться ко входу</a>
 				</div>
+
 				{{ form_end(resetForm) }}
 			</div>
 		</div>
